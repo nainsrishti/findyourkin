@@ -13,6 +13,11 @@ import { rank, type Profile } from "./matcher.ts";
 import { questionnaire } from "./questionnaire.ts";
 
 Deno.serve(async (req) => {
+  // Browsers send a CORS preflight OPTIONS request before the real GET —
+  // must answer it (with the same CORS headers) or the browser blocks the
+  // actual request before it's ever sent.
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS_HEADERS });
+
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) return json({ error: "unauthorized" }, 401);
 
@@ -78,7 +83,13 @@ Deno.serve(async (req) => {
   });
 });
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+};
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
-    status, headers: { "Content-Type": "application/json" },
+    status, headers: { "Content-Type": "application/json", ...CORS_HEADERS },
   });
