@@ -1,0 +1,124 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * findyourKin design system.
+ * Tokens taken from the Stitch reference:
+ *  - primary: #2419b3 (deep indigo)
+ *  - accent:  #E06A50 (warm coral)
+ *  - background-light: #f6f6f8
+ *  - surface: #ffffff
+ *  - text-main: #292524
+ *  - text-muted: #857F72
+ * Font: DM Sans (loaded via <link> in __root.tsx)
+ */
+
+@theme inline {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  --shadow-soft: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 20px -6px rgba(36, 25, 179, 0.08);
+  --shadow-elevated: 0 10px 40px -12px rgba(36, 25, 179, 0.18);
+}
+
+:root {
+  --background: oklch(0.972 0.005 285);            /* #f6f6f8 */
+  --foreground: oklch(0.24 0.008 40);              /* #292524 */
+  --surface: oklch(1 0 0);                         /* #ffffff */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.008 40);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.008 40);
+
+  --primary: oklch(0.325 0.19 279);                /* #2419b3 */
+  --primary-foreground: oklch(1 0 0);
+  --primary-soft: oklch(0.955 0.025 279);
+
+  --secondary: oklch(0.972 0.005 285);
+  --secondary-foreground: oklch(0.24 0.008 40);
+
+  --muted: oklch(0.972 0.005 285);
+  --muted-foreground: oklch(0.58 0.02 60);         /* #857F72 */
+
+  --accent: oklch(0.68 0.14 32);                   /* #E06A50 */
+  --accent-foreground: oklch(1 0 0);
+  --accent-soft: oklch(0.965 0.03 40);             /* orange-50 */
+
+  --success: oklch(0.62 0.15 155);
+  --success-soft: oklch(0.95 0.05 155);
+
+  --destructive: oklch(0.58 0.22 27);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.93 0.008 285);
+  --input: oklch(0.93 0.008 285);
+  --ring: oklch(0.325 0.19 279 / 40%);
+
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5 {
+    letter-spacing: -0.01em;
+  }
+
+  /* Hide scrollbars inside the phone shell for a clean mobile-app feel */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@utility bg-primary-soft {
+  background-color: var(--primary-soft);
+}
+@utility text-primary-soft {
+  color: var(--primary-soft);
+}
