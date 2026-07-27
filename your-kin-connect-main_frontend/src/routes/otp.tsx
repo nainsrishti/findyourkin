@@ -27,7 +27,7 @@ function OtpPage() {
   const [loading, setLoading] = useState(false);
 
   const verify = async () => {
-    if (value.length !== 6 || !email) return;
+    if (value.length !== 8 || !email) return;
     setLoading(true);
 
     const { data, error } = await supabase.auth.verifyOtp({
@@ -66,19 +66,19 @@ function OtpPage() {
     <PhoneShell>
       <ScreenHeader title="Verify your email" backTo="/signup" />
       <div className="px-6 pt-6">
-        <h2 className="text-2xl font-bold text-foreground">Enter the 6-digit code</h2>
+        <h2 className="text-2xl font-bold text-foreground">Enter the 8-digit code</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Sent to <span className="font-medium text-foreground">{email ?? "your email"}</span>
         </p>
 
         <div className="mt-10 flex justify-center">
-          <InputOTP maxLength={6} value={value} onChange={setValue}>
+          <InputOTP maxLength={8} value={value} onChange={setValue}>
             <InputOTPGroup>
-              {[0, 1, 2, 3, 4, 5].map((i) => (
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <InputOTPSlot
                   key={i}
                   index={i}
-                  className="size-12 text-lg rounded-lg border-input"
+                  className="size-10 text-lg rounded-lg border-input"
                 />
               ))}
             </InputOTPGroup>
@@ -89,7 +89,7 @@ function OtpPage() {
           onClick={verify}
           size="lg"
           className="mt-10 h-14 w-full rounded-lg text-base font-semibold"
-          disabled={value.length !== 6 || loading}
+          disabled={value.length !== 8 || loading}
         >
           {loading ? "Verifying…" : "Verify & continue"}
         </Button>
