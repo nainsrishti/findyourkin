@@ -44,7 +44,7 @@ const initialOnboarding: OnboardingState = {
   occupation: "",
   bio: "",
   photoUrl: "",
-  city: "Bangalore",
+  city: "",
   housingChoice: "",
   neighborhoods: [],
   budget: [15000, 30000],

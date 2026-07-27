@@ -76,6 +76,10 @@ export function buildSaveProfilePayload(o: OnboardingState) {
       pet_tolerance: o.preferences.pets ? "ok" : "none",
       has_pets: false,
       dealbreakers: [],
+      // Preference-type dimension: the set of neighborhoods I'd accept,
+      // also doubles as "where I might be found" when someone else's
+      // preferred list is checked against mine.
+      locality: o.neighborhoods,
     },
   };
 }

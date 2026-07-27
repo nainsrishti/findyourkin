@@ -4,6 +4,7 @@ import { PhoneShell } from "@/components/phone-shell";
 import { MatchCard } from "@/components/match-card";
 import { SectionHeader } from "@/components/screen-header";
 import { matchesQuery } from "@/lib/matches";
+import { CITIES } from "@/lib/ncr-locations";
 import { Bell, SlidersHorizontal } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
@@ -21,12 +22,15 @@ function DiscoverPage() {
   const list = matches.filter((m) => !passed.includes(m.user_id));
   const [top, ...rest] = list;
   const user = useAppStore((s) => s.user);
+  const cityLabel = useAppStore(
+    (s) => CITIES.find((c) => c.value === s.onboarding.city)?.label ?? "",
+  );
 
   return (
     <PhoneShell showNav>
       <header className="sticky top-0 z-20 flex items-center justify-between bg-surface/95 backdrop-blur px-6 py-4">
         <div>
-          <p className="text-xs text-muted-foreground">Bangalore</p>
+          <p className="text-xs text-muted-foreground">{cityLabel}</p>
           <h1 className="text-xl font-bold">Hi {user?.name ?? "there"} 👋</h1>
         </div>
         <div className="flex items-center gap-2">

@@ -126,6 +126,19 @@ export const questionnaire: Questionnaire = {
         },
       },
     },
+
+    // ── Directional preference: neighborhoods ────────────────────────────
+    // My answer is the set of localities I'd be happy in; we check it
+    // against THEIR answer to the same question (their own accepted set).
+    // Deliberately left out of `vocab` below — it stays a stage-2 (exact
+    // scoring on the shortlist) signal only, not part of the stage-1 ANN
+    // embedding, so it doesn't require resizing the pgvector column.
+    {
+      id: "locality",
+      label: "Preferred neighborhoods",
+      weight: 0.6,
+      comparator: { kind: "preference", targetQuestion: "locality", partialCredit: 0.3 },
+    },
   ],
 
   hardFilters: buildFilters(),

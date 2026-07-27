@@ -5,7 +5,8 @@ import { ScreenHeader } from "@/components/screen-header";
 import { StepProgress } from "@/components/step-progress";
 import { Button } from "@/components/ui/button";
 import { Tag } from "@/components/tag";
-import { HOUSING_TYPES, NEIGHBORHOODS } from "@/lib/mock-data";
+import { HOUSING_TYPES } from "@/lib/mock-data";
+import { CITIES, NEIGHBORHOODS_BY_CITY } from "@/lib/ncr-locations";
 import { useAppStore } from "@/lib/store";
 import { Check } from "lucide-react";
 
@@ -18,14 +19,22 @@ function HousingStep() {
   const navigate = useNavigate();
   const { onboarding, updateOnboarding } = useAppStore();
   const [choice, setChoice] = useState(onboarding.housingChoice);
+  const [city, setCity] = useState(onboarding.city);
   const [hoods, setHoods] = useState<string[]>(onboarding.neighborhoods);
   const [budget, setBudget] = useState<[number, number]>(onboarding.budget);
+
+  const availableHoods = NEIGHBORHOODS_BY_CITY[city] ?? [];
+
+  const pickCity = (c: string) => {
+    setCity(c);
+    setHoods([]); // neighborhoods are city-specific — clear on city change
+  };
 
   const toggleHood = (h: string) =>
     setHoods((prev) => (prev.includes(h) ? prev.filter((x) => x !== h) : [...prev, h]));
 
   const next = () => {
-    updateOnboarding({ housingChoice: choice, neighborhoods: hoods, budget });
+    updateOnboarding({ housingChoice: choice, city, neighborhoods: hoods, budget });
     navigate({ to: "/onboarding/quiz" });
   };
 
@@ -70,16 +79,29 @@ function HousingStep() {
         </div>
 
         <div className="mt-8">
-          <h3 className="text-sm font-semibold text-foreground">Preferred neighborhoods</h3>
-          <p className="text-xs text-muted-foreground">Pick as many as you like.</p>
+          <h3 className="text-sm font-semibold text-foreground">City</h3>
           <div className="mt-3 flex flex-wrap gap-2">
-            {NEIGHBORHOODS.map((n) => (
-              <Tag key={n} onClick={() => toggleHood(n)} selected={hoods.includes(n)}>
-                {n}
+            {CITIES.map((c) => (
+              <Tag key={c.value} onClick={() => pickCity(c.value)} selected={city === c.value}>
+                {c.label}
               </Tag>
             ))}
           </div>
         </div>
+
+        {availableHoods.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-sm font-semibold text-foreground">Preferred neighborhoods</h3>
+            <p className="text-xs text-muted-foreground">Pick as many as you like.</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {availableHoods.map((n) => (
+                <Tag key={n.value} onClick={() => toggleHood(n.value)} selected={hoods.includes(n.value)}>
+                  {n.label}
+                </Tag>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-8">
           <div className="flex items-baseline justify-between">
@@ -120,7 +142,7 @@ function HousingStep() {
           onClick={next}
           size="lg"
           className="h-14 w-full rounded-lg text-base font-semibold"
-          disabled={!choice}
+          disabled={!choice || !city}
         >
           Continue
         </Button>
