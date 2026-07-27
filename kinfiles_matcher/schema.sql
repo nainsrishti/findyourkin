@@ -113,3 +113,5 @@ create policy "users upload their own avatar"
 create policy "users update their own avatar"
   on storage.objects for update
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ── Demo/seed profiles for local testing — see seed_demo_profiles.sql ───
