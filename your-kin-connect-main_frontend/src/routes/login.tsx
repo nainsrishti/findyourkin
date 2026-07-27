@@ -28,14 +28,12 @@ function LoginPage() {
   });
 
   const onSubmit = form.handleSubmit(async (v) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email: v.email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-    });
+    const { error } = await supabase.auth.signInWithOtp({ email: v.email });
     if (error) {
       toast.error(error.message);
       return;
     }
+    toast.success("Code sent — check your inbox");
     navigate({ to: "/otp", search: { email: v.email } });
   });
 
@@ -45,7 +43,7 @@ function LoginPage() {
       <div className="px-6 pt-6">
         <h2 className="text-2xl font-bold text-foreground">Welcome back</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Enter your email and we'll send you a sign-in link.
+          Enter your email and we'll send you a one-time code.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-5">
@@ -71,7 +69,7 @@ function LoginPage() {
             className="h-14 w-full rounded-lg text-base font-semibold"
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting ? "Sending link…" : "Send sign-in link"}
+            {form.formState.isSubmitting ? "Sending code…" : "Send code"}
           </Button>
         </form>
 
