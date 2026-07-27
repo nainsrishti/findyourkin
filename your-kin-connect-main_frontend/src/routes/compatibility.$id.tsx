@@ -5,7 +5,7 @@ import { ScreenHeader } from "@/components/screen-header";
 import { Button } from "@/components/ui/button";
 import { matchesQuery } from "@/lib/matches";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { MessageCircle, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/compatibility/$id")({
   head: () => ({ meta: [{ title: "Compatibility report — findyourKin" }] }),
@@ -80,6 +80,12 @@ function CompatibilityPage() {
         </section>
 
         <Button asChild size="lg" className="mt-8 h-14 w-full rounded-lg text-base font-semibold">
+          <Link to="/chat/$id" params={{ id: profile.user_id }}>
+            <MessageCircle className="mr-2 size-5" />
+            Message {profile.display_name ?? "them"}
+          </Link>
+        </Button>
+        <Button asChild variant="outline" size="lg" className="mt-3 h-14 w-full rounded-lg text-base font-semibold">
           <Link to="/discover">Back to discover</Link>
         </Button>
       </div>
