@@ -16,14 +16,14 @@ export const Route = createFileRoute("/onboarding/verification")({
 });
 
 const OPTIONS = [
-  { key: "id", label: "Government ID", body: "Required for messaging. Fully private.", icon: IdCard },
-  { key: "employment", label: "Employment", body: "Show your workplace or field of work.", icon: Briefcase },
-  { key: "social", label: "Social profile", body: "Link Instagram or LinkedIn.", icon: Instagram },
+  { key: "id", label: "Government ID", body: "Coming soon.", icon: IdCard },
+  { key: "employment", label: "Employment", body: "Coming soon.", icon: Briefcase },
+  { key: "social", label: "Social profile", body: "Coming soon.", icon: Instagram },
 ];
 
 function VerificationStep() {
   const navigate = useNavigate();
-  const { onboarding, updateOnboarding } = useAppStore();
+  const { onboarding } = useAppStore();
   const [saving, setSaving] = useState(false);
 
   const finish = async () => {
@@ -38,7 +38,6 @@ function VerificationStep() {
       return;
     }
 
-    updateOnboarding({ verifiedId: true });
     toast.success("You're set! Finding your matches…");
     navigate({ to: "/finding-matches" });
   };
@@ -54,7 +53,9 @@ function VerificationStep() {
           </div>
           <div>
             <h2 className="text-2xl font-bold">Get verified</h2>
-            <p className="text-sm text-muted-foreground">Verified profiles get 3× more matches.</p>
+            <p className="text-sm text-muted-foreground">
+              Verification isn't live yet — it's on the way.
+            </p>
           </div>
         </div>
 
@@ -62,10 +63,9 @@ function VerificationStep() {
           {OPTIONS.map((o) => {
             const Icon = o.icon;
             return (
-              <button
+              <div
                 key={o.key}
-                onClick={() => toast(`${o.label} — mock verification passed`)}
-                className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface p-4 text-left hover:border-primary/40 transition-colors"
+                className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface p-4 text-left opacity-60"
               >
                 <div className="flex size-11 items-center justify-center rounded-full bg-muted text-foreground">
                   <Icon className="size-5" />
@@ -74,14 +74,13 @@ function VerificationStep() {
                   <p className="font-semibold text-foreground">{o.label}</p>
                   <p className="text-xs text-muted-foreground">{o.body}</p>
                 </div>
-                <span className="text-sm font-medium text-primary">Verify</span>
-              </button>
+              </div>
             );
           })}
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Your ID is never shared. We only display a verified badge.
+          You can skip this for now — it doesn't affect your matches.
         </p>
       </div>
 
