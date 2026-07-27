@@ -1,10 +1,8 @@
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import type { Message } from "@/lib/mock-data";
 import { motion } from "framer-motion";
 
-export function ChatBubble({ msg }: { msg: Message }) {
-  const mine = msg.from === "me";
+export function ChatBubble({ mine, text, ts }: { mine: boolean; text: string; ts: string | number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -21,7 +19,7 @@ export function ChatBubble({ msg }: { msg: Message }) {
               : "bg-muted text-foreground rounded-bl-md",
           )}
         >
-          {msg.text}
+          {text}
         </div>
         <div
           className={cn(
@@ -29,7 +27,7 @@ export function ChatBubble({ msg }: { msg: Message }) {
             mine ? "text-right" : "text-left",
           )}
         >
-          {format(msg.ts, "p")}
+          {format(new Date(ts), "p")}
         </div>
       </div>
     </motion.div>

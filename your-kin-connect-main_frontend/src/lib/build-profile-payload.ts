@@ -4,13 +4,10 @@ import type { OnboardingState } from "./store";
  * Translates the onboarding UI's collected answers into the shape
  * matcher.ts / questionnaire.ts expect (see supabase/functions/save-profile).
  *
- * This is a best-effort mapping — the current quiz doesn't ask about
- * work-from-home frequency, expected stay length, partner-staying-over, or
- * conflict style, so those scoring dimensions are left unanswered (the
- * matcher excludes unanswered dimensions rather than penalizing them, so
- * nothing breaks — matches are just less precise until those questions
- * exist). Worth adding to the quiz later, especially "conflict style" —
- * it's the one non-compensatory dimension that can cap a bad match.
+ * The quiz's conflict/wfh/stay/partner options use the same value strings
+ * as questionnaire.ts's vocab, so those map straight through with no
+ * translation table needed — only the first four questions (which predate
+ * the matcher integration) need a value mapping.
  */
 
 const BUDGET_BANDS: { max: number; band: string }[] = [
@@ -76,6 +73,10 @@ export function buildSaveProfilePayload(o: OnboardingState) {
       pet_tolerance: o.preferences.pets ? "ok" : "none",
       has_pets: false,
       dealbreakers: [],
+      conflict: o.quiz.conflict,
+      wfh: o.quiz.wfh,
+      stay: o.quiz.stay,
+      partner: o.quiz.partner,
       // Preference-type dimension: the set of neighborhoods I'd accept,
       // also doubles as "where I might be found" when someone else's
       // preferred list is checked against mine.

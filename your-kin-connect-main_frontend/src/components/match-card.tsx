@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { MessageCircle, User } from "lucide-react";
 import type { MatchResult } from "@/lib/matches";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +45,15 @@ export function MatchCard({ match, className }: { match: MatchResult; className?
             {match.occupation && <p className="mt-0.5 text-xs text-white/85">{match.occupation}</p>}
           </div>
         </div>
+      </Link>
+      <Link
+        to="/chat/$id"
+        params={{ id: match.user_id }}
+        aria-label={`Chat with ${match.display_name ?? "this person"}`}
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-3 left-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-surface/90 text-primary shadow backdrop-blur transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <MessageCircle className="size-4" />
       </Link>
     </motion.div>
   );

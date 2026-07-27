@@ -50,6 +50,31 @@ create table interactions (
 );
 create index interactions_actor_idx on interactions (actor_id);
 
+-- ── Messages: direct chat between any two profiles ──────────────────────
+-- Kept simple on purpose — no separate "conversations" table. A thread is
+-- just "all rows where I'm sender or receiver of this other person",
+-- grouped in the app layer. Chat is available as soon as you see someone
+-- on discover — no match/like gate.
+create table messages (
+  id          bigserial primary key,
+  sender_id   uuid not null references profiles(id) on delete cascade,
+  receiver_id uuid not null references profiles(id) on delete cascade,
+  content     text not null check (char_length(content) between 1 and 2000),
+  created_at  timestamptz default now(),
+  read_at     timestamptz
+);
+create index messages_sender_idx   on messages (sender_id, created_at);
+create index messages_receiver_idx on messages (receiver_id, created_at);
+
+alter table messages enable row level security;
+create policy "send messages as self" on messages for insert with check (auth.uid() = sender_id);
+create policy "read own messages"     on messages for select using (auth.uid() = sender_id or auth.uid() = receiver_id);
+create policy "mark received as read" on messages for update
+  using (auth.uid() = receiver_id) with check (auth.uid() = receiver_id);
+
+-- Enable realtime so chat updates live without polling.
+alter publication supabase_realtime add table messages;
+
 -- ── Stage 1: coarse hard filters + ANN shortlist, in Postgres ───────────
 -- Cheap high-selectivity cuts here (city, budget, gender, move-in, situation,
 -- already-seen). The fiddly asymmetric ones (diet/kitchen, smoking, pets,

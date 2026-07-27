@@ -223,6 +223,46 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "hired", label: "Get a house help", emoji: "🧹" },
     ],
   },
+  {
+    id: "conflict",
+    question: "When something's bugging you about a flatmate, what do you do?",
+    options: [
+      { value: "direct", label: "Bring it up directly, right away", emoji: "🗣️" },
+      { value: "hints", label: "Drop hints and hope they notice", emoji: "🙃" },
+      { value: "wait", label: "Wait for the right moment", emoji: "⏳" },
+      { value: "internalize", label: "Usually just let it go", emoji: "🫥" },
+    ],
+  },
+  {
+    id: "wfh",
+    question: "How often do you work from home?",
+    options: [
+      { value: "never", label: "Rarely — I'm out most days", emoji: "🚪" },
+      { value: "hybrid", label: "A couple days a week", emoji: "🔀" },
+      { value: "mostly", label: "Most days", emoji: "🏠" },
+      { value: "always", label: "Always — fully remote", emoji: "💻" },
+    ],
+  },
+  {
+    id: "stay",
+    question: "How long are you looking to stay?",
+    options: [
+      { value: "short", label: "Under 6 months", emoji: "🎒" },
+      { value: "6to12", label: "6–12 months", emoji: "📆" },
+      { value: "1to2yr", label: "1–2 years", emoji: "🗓️" },
+      { value: "longterm", label: "2+ years, ideally", emoji: "🏡" },
+    ],
+  },
+  {
+    id: "partner",
+    question: "How often might a partner stay over?",
+    options: [
+      { value: "never", label: "Never / not applicable", emoji: "🚫" },
+      { value: "occasional", label: "Occasionally", emoji: "💜" },
+      { value: "frequent", label: "Fairly often", emoji: "🔁" },
+      { value: "livein", label: "Practically living there", emoji: "🏠" },
+    ],
+  },
 ];
 
 // ---- Notifications ----
