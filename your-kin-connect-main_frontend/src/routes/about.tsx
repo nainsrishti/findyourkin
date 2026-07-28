@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { InitialsAvatar } from "@/components/initials-avatar";
 import {
   Moon,
   Sparkles,
@@ -137,8 +138,8 @@ function Hero() {
           <div className="rounded-3xl border border-border bg-surface p-5 shadow-elevated">
             <div className="flex items-center justify-between">
               <div className="flex items-center -space-x-3">
-                <img src="https://i.pravatar.cc/150?u=Ananya Kapoor" alt="" className="size-11 rounded-full border-2 border-surface object-cover" />
-                <img src="https://i.pravatar.cc/150?u=Ishita Verma" alt="" className="size-11 rounded-full border-2 border-surface object-cover" />
+                <InitialsAvatar name="Ananya Kapoor" className="size-11 border-2 border-surface text-sm" />
+                <InitialsAvatar name="Ishita Verma" className="size-11 border-2 border-surface text-sm" />
               </div>
               <div className="rounded-full bg-primary-soft px-3 py-1 text-sm font-semibold text-primary">92% match</div>
             </div>

@@ -4,7 +4,8 @@ import { PhoneShell } from "@/components/phone-shell";
 import { fetchThreads } from "@/lib/chat";
 import { formatDistanceToNowStrict } from "date-fns";
 import { EmptyState } from "@/components/empty-state";
-import { MessageCircle, User } from "lucide-react";
+import { InitialsAvatar } from "@/components/initials-avatar";
+import { MessageCircle } from "lucide-react";
 
 const threadsQuery = queryOptions({ queryKey: ["chat-threads"], queryFn: fetchThreads });
 
@@ -48,9 +49,10 @@ function ChatListPage() {
                       className="size-14 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                      <User className="size-6" />
-                    </div>
+                    <InitialsAvatar
+                      name={t.partner.display_name ?? "?"}
+                      className="size-14 text-base"
+                    />
                   )}
                   {t.unread > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground ring-2 ring-surface">

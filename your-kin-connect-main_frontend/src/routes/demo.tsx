@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PhoneShell } from "@/components/phone-shell";
 import { ScreenHeader } from "@/components/screen-header";
 import { Button } from "@/components/ui/button";
+import { InitialsAvatar } from "@/components/initials-avatar";
 import { AlertTriangle, Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/demo")({
@@ -41,8 +42,6 @@ interface DemoMatch {
   filters: DemoFilter[];
   note: string;
 }
-
-const avatarUrl = (seed: string) => `https://i.pravatar.cc/150?u=${seed}`;
 
 const EXAMPLES: DemoMatch[] = [
   {
@@ -146,15 +145,13 @@ function DemoPage() {
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center -space-x-3">
-                  <img
-                    src={avatarUrl(m.personA.name)}
-                    alt=""
-                    className="size-12 rounded-full border-2 border-surface object-cover"
+                  <InitialsAvatar
+                    name={m.personA.name}
+                    className="size-12 border-2 border-surface text-sm"
                   />
-                  <img
-                    src={avatarUrl(m.personB.name)}
-                    alt=""
-                    className="size-12 rounded-full border-2 border-surface object-cover"
+                  <InitialsAvatar
+                    name={m.personB.name}
+                    className="size-12 border-2 border-surface text-sm"
                   />
                 </div>
                 <div

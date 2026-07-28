@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { MessageCircle, User } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import type { MatchResult } from "@/lib/matches";
+import { InitialsAvatar } from "@/components/initials-avatar";
 import { cn } from "@/lib/utils";
 
 export function MatchCard({ match, className }: { match: MatchResult; className?: string }) {
@@ -29,8 +30,11 @@ export function MatchCard({ match, className }: { match: MatchResult; className?
               className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex size-full items-center justify-center text-muted-foreground">
-              <User className="size-10" />
+            <div className="flex size-full items-center justify-center">
+              <InitialsAvatar
+                name={match.display_name ?? "?"}
+                className="size-20 text-2xl"
+              />
             </div>
           )}
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent" />

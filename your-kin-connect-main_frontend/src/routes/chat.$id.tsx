@@ -16,7 +16,8 @@ import {
 } from "@/lib/chat";
 import { reportUser, blockUser, REPORT_REASONS } from "@/lib/safety";
 import { supabase } from "@/lib/supabase";
-import { User, MoreVertical, Flag, ShieldOff } from "lucide-react";
+import { MoreVertical, Flag, ShieldOff } from "lucide-react";
+import { InitialsAvatar } from "@/components/initials-avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -150,9 +151,10 @@ function ChatDetail() {
               {partner.photo_url ? (
                 <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover" />
               ) : (
-                <div className="flex size-full items-center justify-center text-muted-foreground">
-                  <User className="size-4" />
-                </div>
+                <InitialsAvatar
+                  name={partner.display_name ?? "?"}
+                  className="size-full text-sm"
+                />
               )}
             </Link>
             <DropdownMenu>
