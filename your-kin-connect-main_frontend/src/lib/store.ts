@@ -11,6 +11,7 @@ export interface OnboardingState {
   phoneNumber: string;
   city: string;
   housingChoice: string;
+  flatPhotos: string[];
   neighborhoods: string[];
   budget: [number, number];
   moveIn: string;
@@ -48,6 +49,7 @@ const initialOnboarding: OnboardingState = {
   phoneNumber: "",
   city: "",
   housingChoice: "",
+  flatPhotos: [],
   neighborhoods: [],
   budget: [15000, 30000],
   moveIn: "Flexible",

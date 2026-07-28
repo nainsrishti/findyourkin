@@ -13,6 +13,7 @@ create table profiles (
   occupation    text,
   bio           text,
   photo_url     text,
+  flat_photos   text[] not null default '{}', -- only meaningful when situation = 'host'
 
   -- Hard-filter columns get their OWN typed columns (fast, indexable).
   city          text not null,               -- 'gurgaon' | 'delhi' | 'noida' | 'other'
@@ -101,7 +102,8 @@ returns table (
   id uuid, answers jsonb, importance jsonb, traits text[],
   city text, gender text, gender_pref text[], budget_band text,
   situation text, move_in_day int, ann_distance real,
-  display_name text, age smallint, occupation text, bio text, photo_url text
+  display_name text, age smallint, occupation text, bio text, photo_url text,
+  flat_photos text[]
 )
 language sql stable as $$
   with me as (select * from profiles where id = viewer)
@@ -109,7 +111,7 @@ language sql stable as $$
          p.city, p.gender, p.gender_pref, p.budget_band,
          p.situation, p.move_in_day,
          (p.embedding <=> me.embedding)::real as ann_distance,
-         p.display_name, p.age, p.occupation, p.bio, p.photo_url
+         p.display_name, p.age, p.occupation, p.bio, p.photo_url, p.flat_photos
   from profiles p, me
   where p.id <> me.id
     and p.is_active
@@ -155,5 +157,26 @@ create policy "users upload their own avatar"
 create policy "users update their own avatar"
   on storage.objects for update
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ── Storage: flat photos (hosts only) ──────────────────────────
+insert into storage.buckets (id, name, public)
+values ('flat-photos', 'flat-photos', true)
+on conflict (id) do nothing;
+
+create policy "flat photos are publicly readable"
+  on storage.objects for select
+  using (bucket_id = 'flat-photos');
+
+create policy "users upload their own flat photos"
+  on storage.objects for insert
+  with check (bucket_id = 'flat-photos' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "users update their own flat photos"
+  on storage.objects for update
+  using (bucket_id = 'flat-photos' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "users delete their own flat photos"
+  on storage.objects for delete
+  using (bucket_id = 'flat-photos' and (storage.foldername(name))[1] = auth.uid()::text);
 
 -- ── Demo/seed profiles for local testing — see seed_demo_profiles.sql ───

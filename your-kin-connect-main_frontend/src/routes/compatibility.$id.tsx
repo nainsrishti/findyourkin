@@ -61,6 +61,23 @@ function CompatibilityPage() {
           </section>
         )}
 
+        {profile.situation === "host" && profile.flat_photos.length > 0 && (
+          <section className="mt-8">
+            <h2 className="mb-3 text-lg font-bold">The place</h2>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+              {profile.flat_photos.map((url) => (
+                <img
+                  key={url}
+                  src={url}
+                  alt="Photo of the place"
+                  loading="lazy"
+                  className="h-40 w-56 shrink-0 rounded-2xl object-cover"
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className="mt-8">
           <h2 className="mb-4 text-lg font-bold">Why you matched</h2>
           {profile.reasons.length > 0 ? (

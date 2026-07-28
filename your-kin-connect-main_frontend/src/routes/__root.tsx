@@ -87,11 +87,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "Compatibility-first flatmate matching. Take the quiz, meet your kin.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://findyourkin.online/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://findyourkin.online/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "icon", href: "/icon-512.png", type: "image/png", sizes: "512x512" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

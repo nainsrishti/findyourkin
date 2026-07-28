@@ -77,6 +77,8 @@ Deno.serve(async (req) => {
         occupation: r?.occupation ?? null,
         bio: r?.bio ?? null,
         photo_url: r?.photo_url ?? null,
+        situation: r?.situation ?? null,
+        flat_photos: r?.situation === "host" ? (r?.flat_photos ?? []) : [],
         // don't ship `breakdown`/`answers` — that leaks the other person's raw answers
       };
     }),

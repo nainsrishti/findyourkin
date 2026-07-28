@@ -16,6 +16,7 @@
  *            occupation?: string,
  *            bio?: string,
  *            photo_url?: string,
+ *            flat_photos?: string[],       // photos of the place, only meaningful when situation = 'host'
  *            phone_number?: string,        // stored in contact_info, not profiles — private, for the team's outreach only
  *            answers: Record<string, AnswerValue>,
  *            importance?: Record<string, Importance>,
@@ -82,7 +83,7 @@ Deno.serve(async (req) => {
   const {
     display_name, city, gender, gender_pref, budget_band,
     move_in_day, situation, traits, age, occupation, bio, photo_url,
-    phone_number, answers, importance,
+    flat_photos, phone_number, answers, importance,
   } = body ?? {};
 
   const missing = ["display_name", "city", "gender", "budget_band", "move_in_day", "situation"]
@@ -117,6 +118,7 @@ Deno.serve(async (req) => {
     occupation: occupation ?? null,
     bio: bio ?? null,
     photo_url: photo_url ?? null,
+    flat_photos: situation === "host" ? (flat_photos ?? []) : [],
     answers,
     importance: importance ?? {},
     embedding,
@@ -125,7 +127,7 @@ Deno.serve(async (req) => {
   const { data, error } = await supabase
     .from("profiles")
     .upsert(row, { onConflict: "id" })
-    .select("id, display_name, city, gender, budget_band, situation, age, occupation, bio, photo_url, phone_number, answers, importance, embedding")
+    .select("id, display_name, city, gender, budget_band, situation, age, occupation, bio, photo_url, flat_photos, answers, importance, embedding")
     .single();
 
   if (error) return json({ error: error.message }, 500);

@@ -179,6 +179,15 @@ export interface QuizQuestion {
 
 export const quizQuestions: QuizQuestion[] = [
   {
+    id: "overlap",
+    question: "How much space will you actually share with your flatmate?",
+    options: [
+      { value: "solo", label: "Own room, we'll rarely cross paths", emoji: "🚪" },
+      { value: "shared_common", label: "Own room, sharing kitchen/living room", emoji: "🛋️" },
+      { value: "shared_room", label: "Sharing a bedroom", emoji: "🛏️" },
+    ],
+  },
+  {
     id: "wake",
     question: "When do you usually wake up?",
     options: [

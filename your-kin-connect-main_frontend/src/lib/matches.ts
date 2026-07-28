@@ -10,6 +10,8 @@ export interface MatchResult {
   occupation: string | null;
   bio: string | null;
   photo_url: string | null;
+  situation: string | null;
+  flat_photos: string[];
 }
 
 export async function fetchMatches(): Promise<MatchResult[]> {

@@ -41,9 +41,25 @@ const CLEAN_MAP: Record<string, string> = { spotless: "spotless", tidy: "reasona
 const GUESTS_MAP: Record<string, string> = { rare: "rarely", some: "weekly", often: "often" };
 const ENERGY_MAP: Record<string, string> = { "hi-bye": "solitude", friendly: "flexible", friends: "enjoy" };
 
+// How much day-to-day lifestyle fit should count, based on how much space
+// two people will actually share. Own-room-rarely-overlapping households
+// barely notice a sleep-schedule or guests mismatch; sharing a bedroom means
+// it's front and center. Budget/move-in/dealbreakers stay hard filters
+// regardless — this only scales the SOFT lifestyle dimensions via the
+// matcher's existing per-user `importance` mechanism (see matcher.ts).
+const LIFESTYLE_DIMENSIONS = ["sleep", "guests", "home_energy", "wfh", "partner", "cleanliness"];
+const OVERLAP_IMPORTANCE: Record<string, string> = {
+  solo: "low",
+  shared_common: "normal",
+  shared_room: "high",
+};
+
 export function buildSaveProfilePayload(o: OnboardingState) {
   const budget_band = bandFromRange(o.budget);
   const situation = SITUATION_MAP[o.housingChoice] ?? "seeker";
+
+  const overlapLevel = OVERLAP_IMPORTANCE[o.quiz.overlap] ?? "normal";
+  const importance = Object.fromEntries(LIFESTYLE_DIMENSIONS.map((d) => [d, overlapLevel]));
 
   return {
     display_name: o.displayName,
@@ -59,9 +75,12 @@ export function buildSaveProfilePayload(o: OnboardingState) {
     occupation: o.occupation,
     bio: o.bio,
     photo_url: o.photoUrl,
+    // Only meaningful when situation === "host"; save-profile ignores it otherwise.
+    flat_photos: o.flatPhotos,
     // Private — stored separately in contact_info, never shown to other
     // users. Only sent to save-profile if the person filled it in.
     phone_number: o.phoneNumber || undefined,
+    importance,
     answers: {
       sleep: SLEEP_MAP[o.quiz.wake],
       cleanliness: CLEAN_MAP[o.quiz.clean],
@@ -80,6 +99,9 @@ export function buildSaveProfilePayload(o: OnboardingState) {
       wfh: o.quiz.wfh,
       stay: o.quiz.stay,
       partner: o.quiz.partner,
+      // Not a scored dimension itself — just kept for reference. Its real
+      // effect is on `importance` above, which scales the lifestyle dims.
+      overlap: o.quiz.overlap,
       // Preference-type dimension: the set of neighborhoods I'd accept,
       // also doubles as "where I might be found" when someone else's
       // preferred list is checked against mine.
