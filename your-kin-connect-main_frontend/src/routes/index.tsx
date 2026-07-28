@@ -84,12 +84,15 @@ function Welcome() {
               >
                 <Link to="/login">I already have an account</Link>
               </Button>
-              <Link
-                to="/demo"
-                className="text-center text-sm font-medium text-white/85 underline underline-offset-4 hover:text-white"
-              >
-                See example matches
-              </Link>
+              <div className="flex items-center justify-center gap-2 text-sm font-medium text-white/85">
+                <Link to="/demo" className="underline underline-offset-4 hover:text-white">
+                  See example matches
+                </Link>
+                <span className="text-white/40">·</span>
+                <Link to="/about" className="underline underline-offset-4 hover:text-white">
+                  About us
+                </Link>
+              </div>
               <p className="mt-2 text-center text-xs text-white/70">
                 By continuing you agree to our Terms and Privacy Policy.
               </p>

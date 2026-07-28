@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PhoneShell } from "@/components/phone-shell";
 import { useAppStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Edit3, LogOut, Settings, ShieldCheck, Sparkles, Heart } from "lucide-react";
+import { ChevronRight, Edit3, Info, LogOut, Settings, ShieldCheck, Sparkles, Heart } from "lucide-react";
 import { Tag } from "@/components/tag";
 
 export const Route = createFileRoute("/profile/")({
@@ -79,6 +79,7 @@ function MyProfile() {
           <MenuRow icon={<Heart className="size-4" />} label="Your likes & passes" to="/matches" />
           <MenuRow icon={<ShieldCheck className="size-4" />} label="Verification" to="/onboarding/verification" />
           <MenuRow icon={<Settings className="size-4" />} label="Settings" to="/settings" />
+          <MenuRow icon={<Info className="size-4" />} label="About us" to="/about" />
         </section>
 
         <button
