@@ -6,11 +6,10 @@ import { ScreenHeader } from "@/components/screen-header";
 import { StepProgress } from "@/components/step-progress";
 import { Button } from "@/components/ui/button";
 import { Tag } from "@/components/tag";
-import { HOUSING_TYPES } from "@/lib/mock-data";
 import { CITIES, NEIGHBORHOODS_BY_CITY } from "@/lib/ncr-locations";
 import { useAppStore } from "@/lib/store";
 import { supabase } from "@/lib/supabase";
-import { Check, ImagePlus, X } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
 
 const MAX_FLAT_PHOTOS = 5;
 
@@ -22,7 +21,9 @@ export const Route = createFileRoute("/onboarding/housing")({
 function HousingStep() {
   const navigate = useNavigate();
   const { onboarding, updateOnboarding } = useAppStore();
-  const [choice, setChoice] = useState(onboarding.housingChoice);
+  // Set on the very first onboarding screen now — read-only here, just used
+  // to decide whether to show the flat-photo uploader below.
+  const choice = onboarding.housingChoice;
   const [city, setCity] = useState(onboarding.city);
   const [hoods, setHoods] = useState<string[]>(onboarding.neighborhoods);
   const [budget, setBudget] = useState<[number, number]>(onboarding.budget);
@@ -78,49 +79,19 @@ function HousingStep() {
     setFlatPhotos((prev) => prev.filter((p) => p !== url));
 
   const next = () => {
-    updateOnboarding({ housingChoice: choice, city, neighborhoods: hoods, budget, flatPhotos });
+    updateOnboarding({ city, neighborhoods: hoods, budget, flatPhotos });
     navigate({ to: "/onboarding/quiz" });
   };
 
   return (
     <PhoneShell>
-      <ScreenHeader title="Step 2 of 5" backTo="/onboarding/profile" />
+      <ScreenHeader title="Step 3 of 6" backTo="/onboarding/profile" />
       <div className="px-6 pb-32">
-        <StepProgress step={2} total={5} />
+        <StepProgress step={3} total={6} />
         <h2 className="mt-6 text-2xl font-bold">Where are you looking?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Tell us your housing situation and where you'd like to live.
+          Tell us where you'd like to live and your budget.
         </p>
-
-        <div className="mt-6 space-y-3">
-          {HOUSING_TYPES.map((h) => {
-            const active = choice === h.value;
-            return (
-              <button
-                type="button"
-                key={h.value}
-                onClick={() => setChoice(h.value)}
-                className={`w-full text-left rounded-2xl border p-4 transition-all ${
-                  active
-                    ? "border-primary bg-primary-soft"
-                    : "border-border bg-surface hover:border-primary/40"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-semibold text-foreground">{h.label}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{h.body}</p>
-                  </div>
-                  {active && (
-                    <span className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                      <Check className="size-4" />
-                    </span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
 
         {choice === "have-place" && (
           <div className="mt-8">

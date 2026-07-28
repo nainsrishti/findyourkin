@@ -52,7 +52,7 @@ function OtpPage() {
 
     setLoading(false);
     toast.success("Verified!");
-    navigate({ to: profile ? "/discover" : "/onboarding/profile" });
+    navigate({ to: profile ? "/discover" : "/onboarding/situation" });
   };
 
   const resend = async () => {

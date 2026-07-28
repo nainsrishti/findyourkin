@@ -12,26 +12,31 @@ export function useSyncAuth() {
   const logout = useAppStore((s) => s.logout);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setAuthed({
-          id: session.user.id,
-          email: session.user.email ?? "",
-          name: session.user.email?.split("@")[0] ?? "You",
-        });
+    const applySession = async (session: { user: { id: string; email?: string | null } } | null) => {
+      if (!session?.user) {
+        logout();
+        return;
       }
-    });
+      // Fallback only — real name comes from profiles.display_name below,
+      // which onboarding sets. This is just what shows before that loads,
+      // or for a signed-in user who somehow hasn't finished onboarding.
+      const fallbackName = session.user.email?.split("@")[0] ?? "You";
+      setAuthed({ id: session.user.id, email: session.user.email ?? "", name: fallbackName });
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (profile?.display_name) {
+        setAuthed({ id: session.user.id, email: session.user.email ?? "", name: profile.display_name });
+      }
+    };
+
+    supabase.auth.getSession().then(({ data: { session } }) => applySession(session));
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setAuthed({
-          id: session.user.id,
-          email: session.user.email ?? "",
-          name: session.user.email?.split("@")[0] ?? "You",
-        });
-      } else {
-        logout();
-      }
+      applySession(session);
     });
 
     return () => sub.subscription.unsubscribe();

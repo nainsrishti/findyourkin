@@ -44,9 +44,9 @@ function VerificationStep() {
 
   return (
     <PhoneShell>
-      <ScreenHeader title="Step 5 of 5" backTo="/onboarding/preferences" />
+      <ScreenHeader title="Step 6 of 6" backTo="/onboarding/preferences" />
       <div className="px-6 pb-32">
-        <StepProgress step={5} total={5} />
+        <StepProgress step={6} total={6} />
         <div className="mt-6 flex items-center gap-3">
           <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary">
             <ShieldCheck className="size-6" />

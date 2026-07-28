@@ -38,7 +38,7 @@ function QuizStep() {
   return (
     <PhoneShell>
       <ScreenHeader
-        title="Step 3 of 5"
+        title="Step 4 of 6"
         backTo={idx === 0 ? "/onboarding/housing" : undefined}
         right={
           <button
@@ -52,7 +52,7 @@ function QuizStep() {
         }
       />
       <div className="px-6 pt-2">
-        <StepProgress step={3} total={5} />
+        <StepProgress step={4} total={6} />
 
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
           <span>Question {idx + 1} of {quizQuestions.length}</span>

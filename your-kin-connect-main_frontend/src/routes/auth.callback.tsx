@@ -25,7 +25,7 @@ function AuthCallback() {
         .select("id")
         .eq("id", userId)
         .maybeSingle();
-      if (!cancelled) navigate({ to: profile ? "/discover" : "/onboarding/profile" });
+      if (!cancelled) navigate({ to: profile ? "/discover" : "/onboarding/situation" });
     };
 
     const run = async () => {

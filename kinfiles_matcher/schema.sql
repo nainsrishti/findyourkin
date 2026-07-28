@@ -93,6 +93,21 @@ create policy "insert own contact info" on contact_info for insert with check (a
 create policy "read own contact info"   on contact_info for select using (auth.uid() = id);
 create policy "edit own contact info"   on contact_info for update using (auth.uid() = id);
 
+-- ── Reports: safety/moderation, private to the founder ──────────────────
+-- No select policy for regular users — reports are write-only from the
+-- app's side. Review them via the Supabase dashboard Table editor (service
+-- role bypasses RLS), same access pattern as contact_info.
+create table reports (
+  id          bigserial primary key,
+  reporter_id uuid not null references profiles(id) on delete cascade,
+  reported_id uuid not null references profiles(id) on delete cascade,
+  reason      text not null,
+  note        text,
+  created_at  timestamptz default now()
+);
+alter table reports enable row level security;
+create policy "insert own reports" on reports for insert with check (auth.uid() = reporter_id);
+
 -- ── Stage 1: coarse hard filters + ANN shortlist, in Postgres ───────────
 -- Cheap high-selectivity cuts here (city, budget, gender, move-in, situation,
 -- already-seen). The fiddly asymmetric ones (diet/kitchen, smoking, pets,

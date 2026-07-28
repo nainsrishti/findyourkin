@@ -91,9 +91,9 @@ function OnboardingProfile() {
 
   return (
     <PhoneShell>
-      <ScreenHeader title="Step 1 of 5" backTo="/otp" />
+      <ScreenHeader title="Step 2 of 6" backTo="/onboarding/situation" />
       <div className="px-6">
-        <StepProgress step={1} total={5} />
+        <StepProgress step={2} total={6} />
         <h2 className="mt-6 text-2xl font-bold">A little about you</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           We use this to personalize your matches. You can change it later.

@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { PhoneShell } from "@/components/phone-shell";
 import { ScreenHeader } from "@/components/screen-header";
 import { ChatBubble } from "@/components/chat-bubble";
@@ -13,8 +14,24 @@ import {
   markThreadRead,
   type ChatMessage,
 } from "@/lib/chat";
+import { reportUser, blockUser, REPORT_REASONS } from "@/lib/safety";
 import { supabase } from "@/lib/supabase";
-import { User } from "lucide-react";
+import { User, MoreVertical, Flag, ShieldOff } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/chat/$id")({
   head: () => ({ meta: [{ title: "Chat — findyourKin" }] }),
@@ -33,6 +50,7 @@ export const Route = createFileRoute("/chat/$id")({
 function ChatDetail() {
   const { id } = Route.useParams();
   const { partner } = Route.useLoaderData();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: initial } = useSuspenseQuery(
     queryOptions({ queryKey: ["messages", id], queryFn: () => fetchConversation(id) }),
@@ -40,6 +58,10 @@ function ChatDetail() {
   const [msgs, setMsgs] = useState<ChatMessage[]>(initial);
   const [meId, setMeId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState<string | null>(null);
+  const [reportNote, setReportNote] = useState("");
+  const [submittingReport, setSubmittingReport] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,6 +80,36 @@ function ChatDetail() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs.length]);
+
+  const handleBlock = async () => {
+    const ok = window.confirm(
+      `Block ${partner.display_name ?? "this person"}? They won't be able to see or message you again, and you won't see them in Discover.`,
+    );
+    if (!ok) return;
+    try {
+      await blockUser(partner.id);
+      toast.success(`Blocked ${partner.display_name ?? "this person"}.`);
+      navigate({ to: "/chat" });
+    } catch {
+      toast.error("Couldn't block — try again.");
+    }
+  };
+
+  const submitReport = async () => {
+    if (!reportReason) return;
+    setSubmittingReport(true);
+    try {
+      await reportUser(partner.id, reportReason, reportNote.trim() || undefined);
+      toast.success("Report submitted. Thanks for flagging this.");
+      setReportOpen(false);
+      setReportReason(null);
+      setReportNote("");
+    } catch {
+      toast.error("Couldn't submit the report — try again.");
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
 
   const send = async (text: string) => {
     if (sending) return;
@@ -88,22 +140,88 @@ function ChatDetail() {
         title={partner.display_name ?? "findyourKin user"}
         backTo="/chat"
         right={
-          <Link
-            to="/compatibility/$id"
-            params={{ id: partner.id }}
-            aria-label="View compatibility"
-            className="relative block size-9 overflow-hidden rounded-full bg-muted"
-          >
-            {partner.photo_url ? (
-              <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover" />
-            ) : (
-              <div className="flex size-full items-center justify-center text-muted-foreground">
-                <User className="size-4" />
-              </div>
-            )}
-          </Link>
+          <div className="flex items-center gap-1">
+            <Link
+              to="/compatibility/$id"
+              params={{ id: partner.id }}
+              aria-label="View compatibility"
+              className="relative block size-9 overflow-hidden rounded-full bg-muted"
+            >
+              {partner.photo_url ? (
+                <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover" />
+              ) : (
+                <div className="flex size-full items-center justify-center text-muted-foreground">
+                  <User className="size-4" />
+                </div>
+              )}
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="More options"
+                  className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted"
+                >
+                  <MoreVertical className="size-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setReportOpen(true)}>
+                  <Flag className="mr-2 size-4" />
+                  Report
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleBlock} className="text-destructive focus:text-destructive">
+                  <ShieldOff className="mr-2 size-4" />
+                  Block
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         }
       />
+
+      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Report {partner.display_name ?? "this person"}</DialogTitle>
+            <DialogDescription>
+              This goes to the findyourKin team for review — it isn't shared with the person you're reporting.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            {REPORT_REASONS.map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setReportReason(r)}
+                className={`w-full rounded-xl border px-4 py-2.5 text-left text-sm transition-colors ${
+                  reportReason === r
+                    ? "border-primary bg-primary-soft text-primary font-medium"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+            <textarea
+              value={reportNote}
+              onChange={(e) => setReportNote(e.target.value)}
+              placeholder="Anything else we should know? (optional)"
+              rows={3}
+              className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={submitReport}
+              disabled={!reportReason || submittingReport}
+              className="w-full sm:w-auto"
+            >
+              {submittingReport ? "Submitting…" : "Submit report"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Link
         to="/compatibility/$id"

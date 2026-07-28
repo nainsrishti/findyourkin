@@ -39,9 +39,9 @@ function PreferencesStep() {
 
   return (
     <PhoneShell>
-      <ScreenHeader title="Step 4 of 5" backTo="/onboarding/quiz" />
+      <ScreenHeader title="Step 5 of 6" backTo="/onboarding/quiz" />
       <div className="px-6 pb-32">
-        <StepProgress step={4} total={5} />
+        <StepProgress step={5} total={6} />
         <h2 className="mt-6 text-2xl font-bold">Your preferences</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           We'll use these as filters — not deal-breakers.
