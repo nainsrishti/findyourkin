@@ -124,7 +124,7 @@ function Hero() {
               <Link to="/signup">Get started</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-12 rounded-lg px-6 text-base font-medium">
-              <Link to="/demo">See example matches</Link>
+              <Link to="/demo">How it works</Link>
             </Button>
           </div>
         </motion.div>

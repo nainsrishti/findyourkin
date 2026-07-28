@@ -79,7 +79,7 @@ function MyProfile() {
           <MenuRow icon={<Heart className="size-4" />} label="Your likes & passes" to="/matches" />
           <MenuRow icon={<ShieldCheck className="size-4" />} label="Verification" to="/onboarding/verification" />
           <MenuRow icon={<Settings className="size-4" />} label="Settings" to="/settings" />
-          <MenuRow icon={<Info className="size-4" />} label="About us" to="/about" />
+          <MenuRow icon={<Info className="size-4" />} label="Who we are" to="/about" />
         </section>
 
         <button

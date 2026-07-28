@@ -86,11 +86,11 @@ function Welcome() {
               </Button>
               <div className="flex items-center justify-center gap-2 text-sm font-medium text-white/85">
                 <Link to="/demo" className="underline underline-offset-4 hover:text-white">
-                  See example matches
+                  How it works
                 </Link>
                 <span className="text-white/40">·</span>
                 <Link to="/about" className="underline underline-offset-4 hover:text-white">
-                  About us
+                  Who we are
                 </Link>
               </div>
               <p className="mt-2 text-center text-xs text-white/70">
