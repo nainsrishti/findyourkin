@@ -79,7 +79,14 @@ Deno.serve(async (req) => {
         photo_url: r?.photo_url ?? null,
         situation: r?.situation ?? null,
         flat_photos: r?.situation === "host" ? (r?.flat_photos ?? []) : [],
-        // don't ship `breakdown`/`answers` — that leaks the other person's raw answers
+        // Per-dimension compatibility %, for the full report. This ships the
+        // DERIVED score per dimension (e.g. "cleanliness: 82%"), not the raw
+        // answers themselves — `answers` stays unshipped.
+        dimensions: m.breakdown.map((d) => ({
+          id: d.id,
+          label: d.label,
+          score: Math.round(d.raw * 100),
+        })),
       };
     }),
   });

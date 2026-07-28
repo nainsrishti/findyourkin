@@ -12,6 +12,7 @@ export interface MatchResult {
   photo_url: string | null;
   situation: string | null;
   flat_photos: string[];
+  dimensions: { id: string; label: string; score: number }[];
 }
 
 export async function fetchMatches(): Promise<MatchResult[]> {

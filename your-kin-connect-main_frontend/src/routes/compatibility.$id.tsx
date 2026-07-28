@@ -96,6 +96,33 @@ function CompatibilityPage() {
           )}
         </section>
 
+        {profile.dimensions.length > 0 && (
+          <section className="mt-8">
+            <h2 className="mb-1 text-lg font-bold">Compatibility breakdown</h2>
+            <p className="mb-4 text-xs text-muted-foreground">
+              How you two line up on each thing that goes into your score.
+            </p>
+            <div className="space-y-4">
+              {profile.dimensions.map((d) => (
+                <div key={d.id}>
+                  <div className="mb-1.5 flex items-baseline justify-between">
+                    <span className="text-sm font-medium text-foreground">{d.label}</span>
+                    <span className="text-sm font-semibold text-primary">{d.score}%</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                    <motion.div
+                      className="h-full rounded-full bg-primary"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${d.score}%` }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <Button asChild size="lg" className="mt-8 h-14 w-full rounded-lg text-base font-semibold">
           <Link to="/chat/$id" params={{ id: profile.user_id }}>
             <MessageCircle className="mr-2 size-5" />
