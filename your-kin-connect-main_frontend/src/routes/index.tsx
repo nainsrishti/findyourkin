@@ -84,6 +84,12 @@ function Welcome() {
               >
                 <Link to="/login">I already have an account</Link>
               </Button>
+              <Link
+                to="/demo"
+                className="text-center text-sm font-medium text-white/85 underline underline-offset-4 hover:text-white"
+              >
+                See example matches
+              </Link>
               <p className="mt-2 text-center text-xs text-white/70">
                 By continuing you agree to our Terms and Privacy Policy.
               </p>
