@@ -75,6 +75,23 @@ create policy "mark received as read" on messages for update
 -- Enable realtime so chat updates live without polling.
 alter publication supabase_realtime add table messages;
 
+-- ── Contact info: phone number, kept OUT of profiles on purpose ─────────
+-- profiles.select is world-readable (any active row, by anyone signed in) —
+-- fine for name/photo/bio, not fine for a phone number. This table's RLS
+-- only lets a person read their OWN row; the founder can still see every
+-- row via the Supabase dashboard / Table editor, which uses the service
+-- role and bypasses RLS entirely. That's the intended access pattern:
+-- private from other app users, visible to you for outreach.
+create table contact_info (
+  id           uuid primary key references profiles(id) on delete cascade,
+  phone_number text not null,
+  created_at   timestamptz default now()
+);
+alter table contact_info enable row level security;
+create policy "insert own contact info" on contact_info for insert with check (auth.uid() = id);
+create policy "read own contact info"   on contact_info for select using (auth.uid() = id);
+create policy "edit own contact info"   on contact_info for update using (auth.uid() = id);
+
 -- ── Stage 1: coarse hard filters + ANN shortlist, in Postgres ───────────
 -- Cheap high-selectivity cuts here (city, budget, gender, move-in, situation,
 -- already-seen). The fiddly asymmetric ones (diet/kitchen, smoking, pets,

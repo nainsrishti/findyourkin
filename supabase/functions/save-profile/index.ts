@@ -16,6 +16,7 @@
  *            occupation?: string,
  *            bio?: string,
  *            photo_url?: string,
+ *            phone_number?: string,        // stored in contact_info, not profiles — private, for the team's outreach only
  *            answers: Record<string, AnswerValue>,
  *            importance?: Record<string, Importance>,
  *          }
@@ -47,6 +48,7 @@ interface SaveProfileBody {
   occupation?: string;
   bio?: string;
   photo_url?: string;
+  phone_number?: string;
   answers?: Record<string, AnswerValue>;
   importance?: Record<string, Importance>;
 }
@@ -80,7 +82,7 @@ Deno.serve(async (req) => {
   const {
     display_name, city, gender, gender_pref, budget_band,
     move_in_day, situation, traits, age, occupation, bio, photo_url,
-    answers, importance,
+    phone_number, answers, importance,
   } = body ?? {};
 
   const missing = ["display_name", "city", "gender", "budget_band", "move_in_day", "situation"]
@@ -123,10 +125,19 @@ Deno.serve(async (req) => {
   const { data, error } = await supabase
     .from("profiles")
     .upsert(row, { onConflict: "id" })
-    .select("id, display_name, city, gender, budget_band, situation, age, occupation, bio, photo_url, answers, importance, embedding")
+    .select("id, display_name, city, gender, budget_band, situation, age, occupation, bio, photo_url, phone_number, answers, importance, embedding")
     .single();
 
   if (error) return json({ error: error.message }, 500);
+
+  // Phone number lives in its own table (contact_info), not profiles — kept
+  // out of the world-readable profiles row on purpose. Only save it if sent.
+  if (phone_number) {
+    const { error: contactError } = await supabase
+      .from("contact_info")
+      .upsert({ id: user.id, phone_number }, { onConflict: "id" });
+    if (contactError) return json({ error: contactError.message }, 500);
+  }
 
   return json({ profile: data });
 });

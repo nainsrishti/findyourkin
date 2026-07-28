@@ -39,6 +39,7 @@ function ChatDetail() {
   );
   const [msgs, setMsgs] = useState<ChatMessage[]>(initial);
   const [meId, setMeId] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ function ChatDetail() {
   }, [msgs.length]);
 
   const send = async (text: string) => {
+    if (sending) return;
     const optimistic: ChatMessage = {
       id: -Date.now(),
       sender_id: meId ?? "me",
@@ -68,12 +70,15 @@ function ChatDetail() {
       read_at: null,
     };
     setMsgs((prev) => [...prev, optimistic]);
+    setSending(true);
     try {
       const saved = await sendMessage(id, text);
       setMsgs((prev) => prev.map((m) => (m.id === optimistic.id ? saved : m)));
       queryClient.invalidateQueries({ queryKey: ["chat-threads"] });
     } catch {
       setMsgs((prev) => prev.filter((m) => m.id !== optimistic.id));
+    } finally {
+      setSending(false);
     }
   };
 
@@ -126,7 +131,7 @@ function ChatDetail() {
         <div ref={bottomRef} />
       </div>
 
-      <MessageInput onSend={send} />
+      <MessageInput onSend={send} disabled={sending} />
     </PhoneShell>
   );
 }

@@ -65,20 +65,15 @@ export function subscribeToThread(otherId: string, onInsert: (m: ChatMessage) =>
 
   currentUserId().then((me) => {
     if (unsubscribed) return;
+    // Only listen for messages FROM the other person. My own sends are
+    // already added to state directly by sendMessage()'s return value —
+    // also listening for my own inserts here would add them a second time.
     const channel = supabase
       .channel(`messages:${[me, otherId].sort().join(":")}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages", filter: `sender_id=eq.${otherId}` },
         (payload) => onInsert(payload.new as ChatMessage),
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `sender_id=eq.${me}` },
-        (payload) => {
-          const m = payload.new as ChatMessage;
-          if (m.receiver_id === otherId) onInsert(m);
-        },
       )
       .subscribe();
     cleanup = () => supabase.removeChannel(channel);

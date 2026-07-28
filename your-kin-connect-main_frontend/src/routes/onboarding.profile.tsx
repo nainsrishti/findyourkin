@@ -26,6 +26,11 @@ const schema = z.object({
   gender: z.string().min(1, "Select one"),
   occupation: z.string().min(2, "Tell us what you do"),
   bio: z.string().max(280, "Keep it under 280 characters").optional(),
+  phoneNumber: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, "Enter a 10-digit mobile number")
+    .optional()
+    .or(z.literal("")),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -44,6 +49,7 @@ function OnboardingProfile() {
       gender: onboarding.gender,
       occupation: onboarding.occupation,
       bio: onboarding.bio,
+      phoneNumber: onboarding.phoneNumber,
     } as FormValues,
   });
 
@@ -181,6 +187,24 @@ function OnboardingProfile() {
             />
             {form.formState.errors.bio && (
               <p className="text-xs text-destructive">{form.formState.errors.bio.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phoneNumber">Mobile number</Label>
+            <Input
+              id="phoneNumber"
+              type="tel"
+              inputMode="numeric"
+              className="h-12 rounded-lg"
+              placeholder="98765 43210"
+              {...form.register("phoneNumber")}
+            />
+            <p className="text-xs text-muted-foreground">
+              Private — only the findyourKin team can see this, to reach out if needed. Never shown to other members.
+            </p>
+            {form.formState.errors.phoneNumber && (
+              <p className="text-xs text-destructive">{form.formState.errors.phoneNumber.message}</p>
             )}
           </div>
         </form>

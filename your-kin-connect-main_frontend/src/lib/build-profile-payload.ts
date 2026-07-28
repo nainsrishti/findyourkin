@@ -59,6 +59,9 @@ export function buildSaveProfilePayload(o: OnboardingState) {
     occupation: o.occupation,
     bio: o.bio,
     photo_url: o.photoUrl,
+    // Private — stored separately in contact_info, never shown to other
+    // users. Only sent to save-profile if the person filled it in.
+    phone_number: o.phoneNumber || undefined,
     answers: {
       sleep: SLEEP_MAP[o.quiz.wake],
       cleanliness: CLEAN_MAP[o.quiz.clean],

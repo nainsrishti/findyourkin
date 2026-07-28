@@ -8,6 +8,7 @@ export interface OnboardingState {
   occupation: string;
   bio: string;
   photoUrl: string;
+  phoneNumber: string;
   city: string;
   housingChoice: string;
   neighborhoods: string[];
@@ -44,6 +45,7 @@ const initialOnboarding: OnboardingState = {
   occupation: "",
   bio: "",
   photoUrl: "",
+  phoneNumber: "",
   city: "",
   housingChoice: "",
   neighborhoods: [],
