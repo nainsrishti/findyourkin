@@ -7,9 +7,11 @@ import { StepProgress } from "@/components/step-progress";
 import { Button } from "@/components/ui/button";
 import { quizQuestions } from "@/lib/mock-data";
 import { useAppStore } from "@/lib/store";
+import { requireSession } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/onboarding/quiz")({
   head: () => ({ meta: [{ title: "Lifestyle quiz — findyourKin" }] }),
+  beforeLoad: () => requireSession(),
   component: QuizStep,
 });
 

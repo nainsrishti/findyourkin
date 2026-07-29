@@ -5,9 +5,11 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Bell, ChevronRight, HelpCircle, Lock, Shield, Trash2 } from "lucide-react";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Settings — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   component: SettingsPage,
 });
 

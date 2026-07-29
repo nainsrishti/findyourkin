@@ -8,9 +8,11 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tag } from "@/components/tag";
 import { useAppStore } from "@/lib/store";
+import { requireSession } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/onboarding/preferences")({
   head: () => ({ meta: [{ title: "Preferences — findyourKin" }] }),
+  beforeLoad: () => requireSession(),
   component: PreferencesStep,
 });
 

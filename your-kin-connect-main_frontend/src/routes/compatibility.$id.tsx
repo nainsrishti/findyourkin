@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { matchesQuery } from "@/lib/matches";
 import { motion } from "framer-motion";
 import { MessageCircle, Sparkles } from "lucide-react";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/compatibility/$id")({
   head: () => ({ meta: [{ title: "Compatibility report — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(matchesQuery);
   },

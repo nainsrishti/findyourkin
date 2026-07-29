@@ -3,9 +3,11 @@ import { PhoneShell } from "@/components/phone-shell";
 import { ScreenHeader } from "@/components/screen-header";
 import { AlertTriangle, ChevronRight, MessageSquareWarning, Phone, ShieldCheck, UserX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/safety")({
   head: () => ({ meta: [{ title: "Safety center — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   component: SafetyPage,
 });
 

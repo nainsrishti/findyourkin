@@ -7,11 +7,13 @@ import { EmptyState } from "@/components/empty-state";
 import { Heart, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/screen-header";
+import { requireOnboarded } from "@/lib/route-guards";
 
 const profilesQuery = queryOptions({ queryKey: ["profiles"], queryFn: fetchProfiles });
 
 export const Route = createFileRoute("/matches")({
   head: () => ({ meta: [{ title: "Matches — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(profilesQuery);
   },

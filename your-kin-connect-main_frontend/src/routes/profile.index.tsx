@@ -4,9 +4,11 @@ import { useAppStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Edit3, Info, LogOut, Settings, ShieldCheck, Sparkles, Heart } from "lucide-react";
 import { Tag } from "@/components/tag";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({ meta: [{ title: "Your profile — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   component: MyProfile,
 });
 
@@ -51,8 +53,10 @@ function MyProfile() {
               {onboarding.occupation || "Add your occupation"} · {onboarding.city}
             </p>
           </div>
-          <Button variant="outline" size="icon" aria-label="Edit profile" className="rounded-full">
-            <Edit3 className="size-4" />
+          <Button variant="outline" size="icon" aria-label="Edit profile" className="rounded-full" asChild>
+            <Link to="/profile/edit">
+              <Edit3 className="size-4" />
+            </Link>
           </Button>
         </div>
 

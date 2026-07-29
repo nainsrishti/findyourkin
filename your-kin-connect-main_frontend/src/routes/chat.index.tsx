@@ -6,11 +6,13 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { EmptyState } from "@/components/empty-state";
 import { InitialsAvatar } from "@/components/initials-avatar";
 import { MessageCircle } from "lucide-react";
+import { requireOnboarded } from "@/lib/route-guards";
 
 const threadsQuery = queryOptions({ queryKey: ["chat-threads"], queryFn: fetchThreads });
 
 export const Route = createFileRoute("/chat/")({
   head: () => ({ meta: [{ title: "Chats — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(threadsQuery);
   },

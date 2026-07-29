@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { HOUSING_TYPES } from "@/lib/mock-data";
 import { useAppStore } from "@/lib/store";
 import { Check } from "lucide-react";
+import { requireSession } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/onboarding/situation")({
   head: () => ({ meta: [{ title: "Your situation — findyourKin" }] }),
+  beforeLoad: () => requireSession(),
   component: SituationStep,
 });
 

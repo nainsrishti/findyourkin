@@ -9,9 +9,11 @@ import { supabase } from "@/lib/supabase";
 import { buildSaveProfilePayload } from "@/lib/build-profile-payload";
 import { Briefcase, IdCard, Instagram, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
+import { requireSession } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/onboarding/verification")({
   head: () => ({ meta: [{ title: "Get verified — findyourKin" }] }),
+  beforeLoad: () => requireSession(),
   component: VerificationStep,
 });
 

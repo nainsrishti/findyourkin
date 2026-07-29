@@ -7,9 +7,11 @@ import { matchesQuery } from "@/lib/matches";
 import { CITIES } from "@/lib/ncr-locations";
 import { Bell, SlidersHorizontal } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/discover/")({
   head: () => ({ meta: [{ title: "Discover — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(matchesQuery);
   },

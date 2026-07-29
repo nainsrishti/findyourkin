@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { PhoneShell } from "@/components/phone-shell";
 import { Sparkles } from "lucide-react";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/finding-matches")({
   head: () => ({ meta: [{ title: "Finding your matches — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   component: FindingMatches,
 });
 

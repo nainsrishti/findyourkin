@@ -18,6 +18,7 @@ import { reportUser, blockUser, REPORT_REASONS } from "@/lib/safety";
 import { supabase } from "@/lib/supabase";
 import { MoreVertical, Flag, ShieldOff } from "lucide-react";
 import { InitialsAvatar } from "@/components/initials-avatar";
+import { requireOnboarded } from "@/lib/route-guards";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +37,7 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/chat/$id")({
   head: () => ({ meta: [{ title: "Chat — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: async ({ params, context }) => {
     const partner = await context.queryClient.ensureQueryData(
       queryOptions({ queryKey: ["chat-partner", params.id], queryFn: () => fetchPartner(params.id) }),

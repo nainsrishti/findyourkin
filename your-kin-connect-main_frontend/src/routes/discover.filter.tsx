@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Tag } from "@/components/tag";
 import { NEIGHBORHOODS } from "@/lib/mock-data";
 import { Label } from "@/components/ui/label";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/discover/filter")({
   head: () => ({ meta: [{ title: "Filter — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   component: FilterPage,
 });
 

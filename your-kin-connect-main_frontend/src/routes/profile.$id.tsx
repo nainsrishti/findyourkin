@@ -8,9 +8,11 @@ import { getProfile } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/lib/store";
 import { toast } from "sonner";
+import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/profile/$id")({
   head: () => ({ meta: [{ title: "Profile — findyourKin" }] }),
+  beforeLoad: () => requireOnboarded(),
   loader: ({ params }) => {
     const profile = getProfile(params.id);
     if (!profile) throw notFound();

@@ -10,11 +10,13 @@ import { CITIES, NEIGHBORHOODS_BY_CITY } from "@/lib/ncr-locations";
 import { useAppStore } from "@/lib/store";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, X } from "lucide-react";
+import { requireSession } from "@/lib/route-guards";
 
 const MAX_FLAT_PHOTOS = 5;
 
 export const Route = createFileRoute("/onboarding/housing")({
   head: () => ({ meta: [{ title: "Housing — findyourKin" }] }),
+  beforeLoad: () => requireSession(),
   component: HousingStep,
 });
 
