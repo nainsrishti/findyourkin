@@ -48,7 +48,7 @@ function ChatListPage() {
                     <img
                       src={t.partner.photo_url}
                       alt={t.partner.display_name ?? ""}
-                      className="size-14 rounded-full object-cover"
+                      className="size-14 rounded-full object-cover object-top"
                     />
                   ) : (
                     <InitialsAvatar

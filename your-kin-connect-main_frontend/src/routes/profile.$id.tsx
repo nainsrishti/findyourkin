@@ -69,7 +69,7 @@ function ProfileDetail() {
             <img
               src={profile.photo}
               alt={`Portrait of ${profile.name}`}
-              className="size-full object-cover will-change-transform"
+              className="size-full object-cover object-top will-change-transform"
               style={{ transform: `translateY(${scroll * 0.4}px)` }}
             />
           ) : (

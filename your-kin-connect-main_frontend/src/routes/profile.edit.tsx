@@ -188,7 +188,7 @@ function EditProfilePage() {
               className="relative flex size-24 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-muted-foreground"
             >
               {photoUrl ? (
-                <img src={photoUrl} alt="Your profile" className="size-full object-cover" />
+                <img src={photoUrl} alt="Your profile" className="size-full object-cover object-top" />
               ) : (
                 <Camera className="size-6" />
               )}

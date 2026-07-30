@@ -39,7 +39,7 @@ export function MatchCard({ match, className }: { match: MatchResult; className?
               src={match.photo_url}
               alt={`Portrait of ${match.display_name ?? "a potential flatmate"}`}
               loading="lazy"
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div className="flex size-full items-center justify-center">

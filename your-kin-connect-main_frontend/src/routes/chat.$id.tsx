@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { PhoneShell } from "@/components/phone-shell";
 import { ScreenHeader } from "@/components/screen-header";
 import { ChatBubble } from "@/components/chat-bubble";
@@ -16,7 +17,7 @@ import {
 } from "@/lib/chat";
 import { reportUser, blockUser, REPORT_REASONS } from "@/lib/safety";
 import { supabase } from "@/lib/supabase";
-import { MoreVertical, Flag, ShieldOff } from "lucide-react";
+import { MoreVertical, Flag, ShieldOff, Sparkles, ChevronRight, MessageCircle } from "lucide-react";
 import { InitialsAvatar } from "@/components/initials-avatar";
 import { requireOnboarded } from "@/lib/route-guards";
 import {
@@ -151,7 +152,7 @@ function ChatDetail() {
               className="relative block size-9 overflow-hidden rounded-full bg-muted"
             >
               {partner.photo_url ? (
-                <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover" />
+                <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover object-top" />
               ) : (
                 <InitialsAvatar
                   name={partner.display_name ?? "?"}
@@ -227,24 +228,43 @@ function ChatDetail() {
         </DialogContent>
       </Dialog>
 
-      <Link
-        to="/compatibility/$id"
-        params={{ id: partner.id }}
-        className="mx-4 mt-3 flex items-center justify-between rounded-2xl bg-primary-soft px-4 py-3"
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="mx-4 mt-3 flex-shrink-0"
       >
-        <div>
-          <p className="text-xs text-primary/70 font-medium">
-            {partner.occupation ?? "See compatibility"}
-          </p>
-          <p className="text-sm font-semibold text-primary">Why you'd match →</p>
-        </div>
-      </Link>
+        <Link
+          to="/compatibility/$id"
+          params={{ id: partner.id }}
+          className="flex items-center gap-3 rounded-2xl bg-primary-soft px-4 py-3 transition-colors hover:bg-primary-soft/70"
+        >
+          <div className="flex size-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Sparkles className="size-4" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-primary">See why you'd match</p>
+            {partner.occupation && (
+              <p className="truncate text-xs text-primary/70">{partner.occupation}</p>
+            )}
+          </div>
+          <ChevronRight className="size-4 flex-shrink-0 text-primary/50" />
+        </Link>
+      </motion.div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-4">
         {msgs.length === 0 ? (
-          <p className="mt-8 text-center text-sm text-muted-foreground">
-            Say hello to {partner.display_name ?? "them"} to start the conversation.
-          </p>
+          <div className="flex h-full flex-col items-center justify-center px-8 text-center">
+            <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-primary">
+              <MessageCircle className="size-6" />
+            </div>
+            <p className="mt-4 text-sm font-medium text-foreground">
+              Say hello to {partner.display_name ?? "them"}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Break the ice — ask about move-in timing or what they're looking for in a flatmate.
+            </p>
+          </div>
         ) : (
           msgs.map((m) => (
             <ChatBubble key={m.id} mine={m.sender_id === meId} text={m.content} ts={m.created_at} />

@@ -108,7 +108,7 @@ function StripCard({ item }: { item: DisplayItem }) {
   const inner = (
     <div className="relative overflow-hidden rounded-2xl aspect-[3/4] bg-muted">
       {item.photo ? (
-        <img src={item.photo} alt={item.name} className="size-full object-cover" />
+        <img src={item.photo} alt={item.name} className="size-full object-cover object-top" />
       ) : (
         <InitialsAvatar name={item.name} className="size-full rounded-none text-3xl" />
       )}
@@ -142,7 +142,7 @@ function ListRow({ item }: { item: DisplayItem }) {
   const inner = (
     <>
       {item.photo ? (
-        <img src={item.photo} alt={item.name} className="size-14 rounded-full object-cover" />
+        <img src={item.photo} alt={item.name} className="size-14 rounded-full object-cover object-top" />
       ) : (
         <InitialsAvatar name={item.name} className="size-14 text-base" />
       )}

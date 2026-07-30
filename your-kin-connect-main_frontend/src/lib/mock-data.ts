@@ -1,6 +1,8 @@
 // Central mock data + service abstraction for findyourKin.
 // Replace these functions with real API clients later; the shape stays.
 
+import { NEIGHBORHOODS_BY_CITY } from "./ncr-locations";
+
 export type VerificationBadge = "id" | "employment" | "social" | "background";
 
 export interface Profile {
@@ -320,10 +322,11 @@ export const HOUSING_TYPES = [
   { value: "together", label: "Let's find a place together", body: "Search and split a new place with someone." },
 ] as const;
 
-export const NEIGHBORHOODS = [
-  "DLF Phase 1", "Sushant Lok", "Golf Course Road", "Hauz Khas",
-  "Saket", "Vasant Kunj", "Sector 62", "Indirapuram", "Sector 137",
-];
+// Flattened across all NCR cities — kept in sync with the (much longer)
+// onboarding list in ncr-locations.ts instead of maintaining a second copy.
+export const NEIGHBORHOODS = Object.values(NEIGHBORHOODS_BY_CITY)
+  .flat()
+  .map((n) => n.label);
 
 // ---- Mock async service ----
 
