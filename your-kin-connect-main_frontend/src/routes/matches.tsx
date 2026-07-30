@@ -8,6 +8,7 @@ import { Heart, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/screen-header";
 import { requireOnboarded } from "@/lib/route-guards";
+import { InitialsAvatar } from "@/components/initials-avatar";
 
 const profilesQuery = queryOptions({ queryKey: ["profiles"], queryFn: fetchProfiles });
 
@@ -61,7 +62,11 @@ function MatchesPage() {
                 className="flex-shrink-0 w-32"
               >
                 <div className="relative overflow-hidden rounded-2xl aspect-[3/4] bg-muted">
-                  <img src={p.photo} alt={p.name} className="size-full object-cover" />
+                  {p.photo ? (
+                    <img src={p.photo} alt={p.name} className="size-full object-cover" />
+                  ) : (
+                    <InitialsAvatar name={p.name} className="size-full rounded-none text-3xl" />
+                  )}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                     <p className="text-xs font-semibold text-white">{p.name}, {p.age}</p>
                     <p className="text-[10px] text-white/85">{p.compatibilityScore}% match</p>
@@ -80,7 +85,11 @@ function MatchesPage() {
                   params={{ id: `c_${p.id}` }}
                   className="flex items-center gap-3 px-6 py-3 hover:bg-muted/50"
                 >
-                  <img src={p.photo} alt={p.name} className="size-14 rounded-full object-cover" />
+                  {p.photo ? (
+                    <img src={p.photo} alt={p.name} className="size-14 rounded-full object-cover" />
+                  ) : (
+                    <InitialsAvatar name={p.name} className="size-14 text-base" />
+                  )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <p className="font-semibold text-foreground">{p.name}, {p.age}</p>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/lib/store";
 import { toast } from "sonner";
 import { requireOnboarded } from "@/lib/route-guards";
+import { InitialsAvatar } from "@/components/initials-avatar";
 
 export const Route = createFileRoute("/profile/$id")({
   head: () => ({ meta: [{ title: "Profile — findyourKin" }] }),
@@ -64,12 +65,16 @@ function ProfileDetail() {
         </div>
 
         <div className="relative h-[380px] w-full overflow-hidden bg-muted">
-          <img
-            src={profile.photo}
-            alt={`Portrait of ${profile.name}`}
-            className="size-full object-cover will-change-transform"
-            style={{ transform: `translateY(${scroll * 0.4}px)` }}
-          />
+          {profile.photo ? (
+            <img
+              src={profile.photo}
+              alt={`Portrait of ${profile.name}`}
+              className="size-full object-cover will-change-transform"
+              style={{ transform: `translateY(${scroll * 0.4}px)` }}
+            />
+          ) : (
+            <InitialsAvatar name={profile.name} className="size-full rounded-none text-6xl" />
+          )}
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute right-4 top-4 rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold shadow-lg" style={{ marginTop: 60 }}>
             {profile.compatibilityScore}% match

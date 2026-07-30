@@ -47,15 +47,31 @@ const ROOM = [
   "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&auto=format&fit=crop&q=70",
 ];
 
-const NAMES: Array<{ name: string; age: number; occ: string; hood: string }> = [
-  { name: "Aisha", age: 24, occ: "UI Designer", hood: "Indiranagar" },
-  { name: "Priya", age: 26, occ: "Product Manager", hood: "Koramangala" },
-  { name: "Meera", age: 23, occ: "Frontend Engineer", hood: "HSR Layout" },
-  { name: "Rhea", age: 27, occ: "Content Strategist", hood: "Jayanagar" },
-  { name: "Ananya", age: 25, occ: "Data Analyst", hood: "Whitefield" },
-  { name: "Sana", age: 24, occ: "Illustrator", hood: "Domlur" },
-  { name: "Tara", age: 28, occ: "Startup Founder", hood: "MG Road" },
-  { name: "Ishita", age: 22, occ: "Journalist", hood: "Malleshwaram" },
+// Delhi NCR neighborhoods, matching kinfiles's real vocabulary in
+// ncr-locations.ts (kept as plain strings here since this mock list predates
+// the real city/locality slugs and is display-only).
+const NAMES: Array<{
+  name: string; age: number; occ: string; hood: string; city: string;
+  photo?: string; bio?: string;
+}> = [
+  // Srishti's own profile — shown to everyone as the featured/example
+  // match. No stock photo here on purpose; swap in her real photo URL once
+  // it's uploaded (falls back to an initials avatar until then). Her own
+  // dedicated bio, kept out of the shared BIOS pool below so it can never
+  // get reassigned to someone else by the modulo cycling.
+  {
+    name: "Srishti", age: 23, occ: "Founder, findyourKin", hood: "DLF Phase 1", city: "Gurgaon",
+    photo: "",
+    bio: "Hey! I'm the founder of findyourKin, building this because I know how hard it is to find a flatmate you actually vibe with in Gurgaon. Say hi if you're in NCR — always happy to chat about the app or just be your flatmate.",
+  },
+  { name: "Aisha", age: 24, occ: "UI Designer", hood: "Sushant Lok", city: "Gurgaon" },
+  { name: "Priya", age: 26, occ: "Product Manager", hood: "Hauz Khas", city: "Delhi" },
+  { name: "Meera", age: 23, occ: "Frontend Engineer", hood: "Sector 62", city: "Noida" },
+  { name: "Rhea", age: 27, occ: "Content Strategist", hood: "Saket", city: "Delhi" },
+  { name: "Ananya", age: 25, occ: "Data Analyst", hood: "Golf Course Road", city: "Gurgaon" },
+  { name: "Sana", age: 24, occ: "Illustrator", hood: "Indirapuram", city: "Noida" },
+  { name: "Tara", age: 28, occ: "Startup Founder", hood: "Vasant Kunj", city: "Delhi" },
+  { name: "Ishita", age: 22, occ: "Journalist", hood: "Sector 137", city: "Noida" },
 ];
 
 const TAGS_POOL = [
@@ -65,7 +81,7 @@ const TAGS_POOL = [
 ];
 
 const BIOS = [
-  "Hey! I'm a UI designer working mostly from the office. I love keeping my space organized and calm. On weekends you'll find me at Cubbon Park or trying a new coffee shop. Looking for a flatmate who respects privacy but is down for occasional movie nights.",
+  "Hey! I'm a UI designer working mostly from the office. I love keeping my space organized and calm. On weekends you'll find me at Cyber Hub or trying a new coffee shop. Looking for a flatmate who respects privacy but is down for occasional movie nights.",
   "PM by day, potter by night. I keep common spaces spotless and cook most evenings. Looking for someone chill, communicative and mildly obsessed with plants.",
   "Engineer, runner, weekend baker. I value quiet mornings and a tidy kitchen. Would love to share space with someone who respects boundaries and enjoys the occasional dinner in.",
   "Words person. Love long walks, longer books, and lots of chai. Looking for a flatmate who's kind, low-drama, and okay with a very fluffy cat.",
@@ -98,11 +114,11 @@ export const profiles: Profile[] = NAMES.map((n, i) => {
     id: `p_${i + 1}`,
     name: n.name,
     age: n.age,
-    location: "Bangalore",
+    location: n.city,
     neighborhood: n.hood,
-    photo: PHOTOS[i % PHOTOS.length],
+    photo: n.photo ?? PHOTOS[i % PHOTOS.length],
     gallery: [PHOTOS[i % PHOTOS.length], ROOM[i % ROOM.length], PHOTOS[(i + 3) % PHOTOS.length]],
-    bio: BIOS[i % BIOS.length],
+    bio: n.bio ?? BIOS[i % BIOS.length],
     occupation: n.occ,
     tags,
     compatibilityScore: 96 - i * 4,
@@ -300,8 +316,8 @@ export const HOUSING_TYPES = [
 ] as const;
 
 export const NEIGHBORHOODS = [
-  "Indiranagar", "Koramangala", "HSR Layout", "Jayanagar",
-  "Whitefield", "Domlur", "MG Road", "Malleshwaram", "Bellandur",
+  "DLF Phase 1", "Sushant Lok", "Golf Course Road", "Hauz Khas",
+  "Saket", "Vasant Kunj", "Sector 62", "Indirapuram", "Sector 137",
 ];
 
 // ---- Mock async service ----
