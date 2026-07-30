@@ -1,11 +1,23 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Heart } from "lucide-react";
 import type { MatchResult } from "@/lib/matches";
 import { InitialsAvatar } from "@/components/initials-avatar";
+import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export function MatchCard({ match, className }: { match: MatchResult; className?: string }) {
+  const liked = useAppStore((s) => s.likedIds.includes(match.user_id));
+  const like = useAppStore((s) => s.like);
+  const unlike = useAppStore((s) => s.unlike);
+
+  const toggleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (liked) unlike(match.user_id);
+    else like(match.user_id);
+  };
+
   return (
     <motion.div
       whileHover={{ y: -3 }}
@@ -59,6 +71,18 @@ export function MatchCard({ match, className }: { match: MatchResult; className?
       >
         <MessageCircle className="size-4" />
       </Link>
+      <button
+        type="button"
+        onClick={toggleLike}
+        aria-label={liked ? `Unlike ${match.display_name ?? "this person"}` : `Like ${match.display_name ?? "this person"}`}
+        aria-pressed={liked}
+        className={cn(
+          "absolute top-14 right-3 z-10 inline-flex size-9 items-center justify-center rounded-full shadow backdrop-blur transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          liked ? "bg-accent text-accent-foreground" : "bg-surface/90 text-foreground",
+        )}
+      >
+        <Heart className={cn("size-4", liked && "fill-current")} />
+      </button>
     </motion.div>
   );
 }

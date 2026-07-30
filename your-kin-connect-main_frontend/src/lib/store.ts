@@ -35,6 +35,7 @@ interface AppState {
   logout: () => void;
   updateOnboarding: (patch: Partial<OnboardingState>) => void;
   like: (id: string) => void;
+  unlike: (id: string) => void;
   pass: (id: string) => void;
   reset: () => void;
 }
@@ -72,6 +73,8 @@ export const useAppStore = create<AppState>()(
         set((s) => ({ onboarding: { ...s.onboarding, ...patch } })),
       like: (id) =>
         set((s) => ({ likedIds: Array.from(new Set([...s.likedIds, id])) })),
+      unlike: (id) =>
+        set((s) => ({ likedIds: s.likedIds.filter((x) => x !== id) })),
       pass: (id) =>
         set((s) => ({ passedIds: Array.from(new Set([...s.passedIds, id])) })),
       reset: () => set({ onboarding: initialOnboarding, likedIds: [], passedIds: [] }),

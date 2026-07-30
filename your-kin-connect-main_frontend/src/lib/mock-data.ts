@@ -16,6 +16,9 @@ export interface Profile {
   tags: string[];
   compatibilityScore: number; // 0-100
   verified: VerificationBadge[];
+  // Pinned so this profile always shows on /matches regardless of the
+  // current user's like history — see matches.tsx.
+  founder?: boolean;
   traits: {
     cleanliness: number;
     social: number;
@@ -52,7 +55,7 @@ const ROOM = [
 // the real city/locality slugs and is display-only).
 const NAMES: Array<{
   name: string; age: number; occ: string; hood: string; city: string;
-  photo?: string; bio?: string;
+  photo?: string; bio?: string; founder?: boolean;
 }> = [
   // Srishti's own profile — shown to everyone as the featured/example
   // match. No stock photo here on purpose; swap in her real photo URL once
@@ -61,8 +64,9 @@ const NAMES: Array<{
   // get reassigned to someone else by the modulo cycling.
   {
     name: "Srishti", age: 23, occ: "Founder, findyourKin", hood: "DLF Phase 1", city: "Gurgaon",
-    photo: "",
+    photo: "/founder.jpg",
     bio: "Hey! I'm the founder of findyourKin, building this because I know how hard it is to find a flatmate you actually vibe with in Gurgaon. Say hi if you're in NCR — always happy to chat about the app or just be your flatmate.",
+    founder: true,
   },
   { name: "Aisha", age: 24, occ: "UI Designer", hood: "Sushant Lok", city: "Gurgaon" },
   { name: "Priya", age: 26, occ: "Product Manager", hood: "Hauz Khas", city: "Delhi" },
@@ -135,6 +139,7 @@ export const profiles: Profile[] = NAMES.map((n, i) => {
     moveIn: ["Immediately", "In 2 weeks", "Next month", "Flexible"][i % 4],
     housingType: (["Studio", "1BHK", "2BHK", "3BHK"] as const)[i % 4],
     prompts: [PROMPTS[i % 4], PROMPTS[(i + 1) % 4]],
+    founder: n.founder,
   };
 });
 
