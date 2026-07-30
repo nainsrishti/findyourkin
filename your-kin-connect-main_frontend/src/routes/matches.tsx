@@ -20,13 +20,11 @@ export const Route = createFileRoute("/matches")({
 });
 
 // The founder is pinned as the first card everywhere on this page —
-// present regardless of anyone's actual like history. Not wired into real
-// chat (we can't reliably resolve a real user_id for her account from
-// here), so tapping her card opens a prefilled email instead — always
-// works, no dependency on her having a matchable profile.
-const FOUNDER_MAILTO = `mailto:nainasingh4524@gmail.com?subject=${encodeURIComponent(
-  "Hey from findyourKin!",
-)}&body=${encodeURIComponent("Hi Srishti,\n\n")}`;
+// present regardless of anyone's actual like history. Links straight to
+// real chat with her real account (fetchPartner just reads the profiles
+// table by id, no dependency on the matching algorithm having surfaced her
+// as a candidate).
+const FOUNDER_ID = "b3644fd1-afa8-4c98-aea7-fbf3521d0298";
 
 interface DisplayItem {
   id: string;
@@ -39,7 +37,7 @@ interface DisplayItem {
 }
 
 const FOUNDER_ITEM: DisplayItem = {
-  id: "founder",
+  id: FOUNDER_ID,
   name: "Srishti Singh",
   age: 23,
   photo: "/founder.jpg",
@@ -128,9 +126,9 @@ function StripCard({ item }: { item: DisplayItem }) {
 
   if (item.founder) {
     return (
-      <a href={FOUNDER_MAILTO} className="flex-shrink-0 w-32">
+      <Link to="/chat/$id" params={{ id: item.id }} className="flex-shrink-0 w-32">
         {inner}
-      </a>
+      </Link>
     );
   }
   return (
@@ -162,15 +160,6 @@ function ListRow({ item }: { item: DisplayItem }) {
     </>
   );
 
-  if (item.founder) {
-    return (
-      <li>
-        <a href={FOUNDER_MAILTO} className="flex items-center gap-3 px-6 py-3 hover:bg-muted/50">
-          {inner}
-        </a>
-      </li>
-    );
-  }
   return (
     <li>
       <Link

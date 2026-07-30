@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PhoneShell } from "@/components/phone-shell";
 import { useAppStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Edit3, Info, LogOut, Settings, ShieldCheck, Sparkles, Heart } from "lucide-react";
+import { ChevronRight, Edit3, Info, LogOut, Settings, ShieldCheck, Sparkles, Heart, Bug } from "lucide-react";
 import { Tag } from "@/components/tag";
 import { requireOnboarded } from "@/lib/route-guards";
 
@@ -11,6 +11,12 @@ export const Route = createFileRoute("/profile/")({
   beforeLoad: () => requireOnboarded(),
   component: MyProfile,
 });
+
+const BUG_REPORT_MAILTO = `mailto:nainsrishtisingh@gmail.com?subject=${encodeURIComponent(
+  "Bug report — findyourKin",
+)}&body=${encodeURIComponent(
+  "What happened?\n\n\nSteps to reproduce:\n\n\n(Feel free to attach a screenshot after sending)",
+)}`;
 
 function MyProfile() {
   const navigate = useNavigate();
@@ -84,6 +90,7 @@ function MyProfile() {
           <MenuRow icon={<ShieldCheck className="size-4" />} label="Verification" to="/onboarding/verification" />
           <MenuRow icon={<Settings className="size-4" />} label="Settings" to="/settings" />
           <MenuRow icon={<Info className="size-4" />} label="Who we are" to="/about" />
+          <MenuRow icon={<Bug className="size-4" />} label="Report a bug" href={BUG_REPORT_MAILTO} />
         </section>
 
         <button
@@ -109,12 +116,35 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function MenuRow({ icon, label, to }: { icon: React.ReactNode; label: string; to: string }) {
-  return (
-    <Link to={to} className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/50">
+function MenuRow({
+  icon,
+  label,
+  to,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  to?: string;
+  href?: string;
+}) {
+  const content = (
+    <>
       <div className="flex size-8 items-center justify-center rounded-full bg-primary-soft text-primary">{icon}</div>
       <span className="flex-1 text-sm font-medium text-foreground">{label}</span>
       <ChevronRight className="size-4 text-muted-foreground" />
+    </>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/50">
+        {content}
+      </a>
+    );
+  }
+  return (
+    <Link to={to!} className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/50">
+      {content}
     </Link>
   );
 }
