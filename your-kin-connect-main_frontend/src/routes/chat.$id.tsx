@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { matchesQuery } from "@/lib/matches";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { PhoneShell } from "@/components/phone-shell";
@@ -59,6 +60,12 @@ function ChatDetail() {
   const { data: initial } = useSuspenseQuery(
     queryOptions({ queryKey: ["messages", id], queryFn: () => fetchConversation(id) }),
   );
+  // The compatibility report only exists for people in my ranked match list.
+  // Chatting is open to anyone (e.g. the founder's pinned card), so hide
+  // compatibility links when there's no report to show — linking anyway
+  // used to land on a "not found" screen.
+  const { data: matchList } = useQuery(matchesQuery);
+  const hasReport = matchList?.some((m) => m.user_id === id) ?? false;
   const [msgs, setMsgs] = useState<ChatMessage[]>(initial);
   const [meId, setMeId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -67,6 +74,17 @@ function ChatDetail() {
   const [reportNote, setReportNote] = useState("");
   const [submittingReport, setSubmittingReport] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Reset local message state when switching to a different thread — the
+  // component stays mounted across param changes, so useState(initial)
+  // alone would keep showing the previous conversation.
+  const prevIdRef = useRef(id);
+  useEffect(() => {
+    if (prevIdRef.current !== id) {
+      prevIdRef.current = id;
+      setMsgs(initial);
+    }
+  }, [id, initial]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setMeId(data.user?.id ?? null));
@@ -141,25 +159,33 @@ function ChatDetail() {
   return (
     <PhoneShell scrollable={false}>
       <ScreenHeader
+        className="flex-shrink-0"
         title={partner.display_name ?? "findyourKin user"}
         backTo="/chat"
         right={
           <div className="flex items-center gap-1">
-            <Link
-              to="/compatibility/$id"
-              params={{ id: partner.id }}
-              aria-label="View compatibility"
-              className="relative block size-9 overflow-hidden rounded-full bg-muted"
-            >
-              {partner.photo_url ? (
+            {(() => {
+              const avatar = partner.photo_url ? (
                 <img src={partner.photo_url} alt={partner.display_name ?? ""} className="size-full object-cover object-top" />
               ) : (
                 <InitialsAvatar
                   name={partner.display_name ?? "?"}
                   className="size-full text-sm"
                 />
-              )}
-            </Link>
+              );
+              return hasReport ? (
+                <Link
+                  to="/compatibility/$id"
+                  params={{ id: partner.id }}
+                  aria-label="View compatibility"
+                  className="relative block size-9 overflow-hidden rounded-full bg-muted"
+                >
+                  {avatar}
+                </Link>
+              ) : (
+                <div className="relative size-9 overflow-hidden rounded-full bg-muted">{avatar}</div>
+              );
+            })()}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -228,6 +254,7 @@ function ChatDetail() {
         </DialogContent>
       </Dialog>
 
+      {hasReport && (
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
@@ -251,8 +278,9 @@ function ChatDetail() {
           <ChevronRight className="size-4 flex-shrink-0 text-primary/50" />
         </Link>
       </motion.div>
+      )}
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-4">
+      <div className="min-h-0 flex-1 overflow-y-auto no-scrollbar px-4 py-4">
         {msgs.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center px-8 text-center">
             <div className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-primary">

@@ -28,9 +28,19 @@ function LoginPage() {
   });
 
   const onSubmit = form.handleSubmit(async (v) => {
-    const { error } = await supabase.auth.signInWithOtp({ email: v.email });
+    // Log in should never silently create a fresh account for a typo'd
+    // email — that lands people in onboarding wondering where their
+    // profile went. New accounts go through /signup.
+    const { error } = await supabase.auth.signInWithOtp({
+      email: v.email,
+      options: { shouldCreateUser: false },
+    });
     if (error) {
-      toast.error(error.message);
+      toast.error(
+        /not allowed|not found|signups/i.test(error.message)
+          ? "No account with this email yet — tap Create account below."
+          : error.message,
+      );
       return;
     }
     toast.success("Code sent — check your inbox");

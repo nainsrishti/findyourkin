@@ -3,10 +3,12 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { PhoneShell } from "@/components/phone-shell";
 import { MatchCard } from "@/components/match-card";
 import { SectionHeader } from "@/components/screen-header";
-import { matchesQuery } from "@/lib/matches";
+import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
+import { matchesQuery, applyDiscoverFilters, filtersActive } from "@/lib/matches";
 import { CITIES } from "@/lib/ncr-locations";
-import { Bell, SlidersHorizontal } from "lucide-react";
-import { useAppStore } from "@/lib/store";
+import { SlidersHorizontal, Users } from "lucide-react";
+import { useAppStore, DEFAULT_FILTERS } from "@/lib/store";
 import { requireOnboarded } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/discover/")({
@@ -21,7 +23,11 @@ export const Route = createFileRoute("/discover/")({
 function DiscoverPage() {
   const { data: matches } = useSuspenseQuery(matchesQuery);
   const passed = useAppStore((s) => s.passedIds);
-  const list = matches.filter((m) => !passed.includes(m.user_id));
+  const filters = useAppStore((s) => s.discoverFilters);
+  const setDiscoverFilters = useAppStore((s) => s.setDiscoverFilters);
+  const notPassed = matches.filter((m) => !passed.includes(m.user_id));
+  const list = applyDiscoverFilters(notPassed, filters);
+  const hasActiveFilters = filtersActive(filters);
   const [top, ...rest] = list;
   const user = useAppStore((s) => s.user);
   const cityLabel = useAppStore(
@@ -35,21 +41,16 @@ function DiscoverPage() {
           <p className="text-xs text-muted-foreground">{cityLabel}</p>
           <h1 className="text-xl font-bold">Hi {user?.name ?? "there"} 👋</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            to="/discover/filter"
-            className="inline-flex size-10 items-center justify-center rounded-full bg-muted text-foreground hover:bg-muted/80"
-            aria-label="Filters"
-          >
-            <SlidersHorizontal className="size-4" />
-          </Link>
-          <button
-            className="inline-flex size-10 items-center justify-center rounded-full bg-muted text-foreground hover:bg-muted/80"
-            aria-label="Notifications"
-          >
-            <Bell className="size-4" />
-          </button>
-        </div>
+        <Link
+          to="/discover/filter"
+          className="relative inline-flex size-10 items-center justify-center rounded-full bg-muted text-foreground hover:bg-muted/80"
+          aria-label="Filters"
+        >
+          <SlidersHorizontal className="size-4" />
+          {hasActiveFilters && (
+            <span className="absolute -top-0.5 -right-0.5 size-2.5 rounded-full bg-accent ring-2 ring-surface" />
+          )}
+        </Link>
       </header>
 
       {top && (
@@ -73,12 +74,36 @@ function DiscoverPage() {
         </div>
       )}
 
-      <SectionHeader title="More for you" action="Filters" actionTo="/discover/filter" />
-      <div className="grid grid-cols-2 gap-3 px-6 pb-8">
-        {rest.map((m) => (
-          <MatchCard key={m.user_id} match={m} />
-        ))}
-      </div>
+      {list.length === 0 && (
+        <EmptyState
+          icon={<Users className="size-6" />}
+          title={hasActiveFilters ? "No one fits these filters" : "No matches yet"}
+          description={
+            hasActiveFilters
+              ? "Try widening your filters — new people join every week."
+              : "You're early! As more people in your city finish the quiz, matches will show up here."
+          }
+          action={
+            hasActiveFilters ? (
+              <Button onClick={() => setDiscoverFilters(DEFAULT_FILTERS)}>
+                Clear filters
+              </Button>
+            ) : undefined
+          }
+          className="pt-10"
+        />
+      )}
+
+      {rest.length > 0 && (
+        <>
+          <SectionHeader title="More for you" action="Filters" actionTo="/discover/filter" />
+          <div className="grid grid-cols-2 gap-3 px-6 pb-8">
+            {rest.map((m) => (
+              <MatchCard key={m.user_id} match={m} />
+            ))}
+          </div>
+        </>
+      )}
     </PhoneShell>
   );
 }

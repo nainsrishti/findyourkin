@@ -69,7 +69,9 @@ function MatchesPage() {
       <header className="sticky top-0 z-20 bg-surface/95 backdrop-blur px-6 py-4">
         <h1 className="text-2xl font-bold">Your matches</h1>
         <p className="text-xs text-muted-foreground">
-          You've mutually liked {realMatches.length} people
+          {realMatches.length === 0
+            ? "People you like will show up here"
+            : `${realMatches.length} ${realMatches.length === 1 ? "person" : "people"} you've liked`}
         </p>
       </header>
 

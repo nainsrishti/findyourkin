@@ -35,7 +35,13 @@ export function PhoneShell({
         <div
           className={cn(
             "flex-1 no-scrollbar",
-            scrollable && "overflow-y-auto overflow-x-hidden",
+            scrollable
+              ? "overflow-y-auto overflow-x-hidden"
+              : // Non-scrollable pages (chat) manage their own inner scroll
+                // area, so they need a full-height flex column to size
+                // against — without this, flex-1/overflow-y-auto children
+                // silently do nothing and content gets clipped.
+                "flex min-h-0 flex-col overflow-hidden",
             showNav && "pb-24",
             contentClassName,
           )}
@@ -47,7 +53,7 @@ export function PhoneShell({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="min-h-full"
+              className={scrollable ? "min-h-full" : "flex min-h-0 flex-1 flex-col"}
             >
               {children}
             </motion.div>

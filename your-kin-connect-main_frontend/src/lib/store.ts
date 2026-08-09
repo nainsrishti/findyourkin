@@ -25,18 +25,29 @@ export interface OnboardingState {
   verifiedId: boolean;
 }
 
+export interface DiscoverFilters {
+  /** "any" | "host" | "seeker" | "cohunt" */
+  situation: string;
+  /** "any" | "18-24" | "25-30" | "31plus" */
+  ageRange: string;
+}
+
+export const DEFAULT_FILTERS: DiscoverFilters = { situation: "any", ageRange: "any" };
+
 interface AppState {
   isAuthed: boolean;
   user: { id: string; email: string; name: string } | null;
   onboarding: OnboardingState;
   likedIds: string[];
   passedIds: string[];
+  discoverFilters: DiscoverFilters;
   setAuthed: (u: AppState["user"]) => void;
   logout: () => void;
   updateOnboarding: (patch: Partial<OnboardingState>) => void;
   like: (id: string) => void;
   unlike: (id: string) => void;
   pass: (id: string) => void;
+  setDiscoverFilters: (f: DiscoverFilters) => void;
   reset: () => void;
 }
 
@@ -67,6 +78,7 @@ export const useAppStore = create<AppState>()(
       onboarding: initialOnboarding,
       likedIds: [],
       passedIds: [],
+      discoverFilters: DEFAULT_FILTERS,
       setAuthed: (u) => set({ isAuthed: !!u, user: u }),
       logout: () => set({ isAuthed: false, user: null }),
       updateOnboarding: (patch) =>
@@ -77,7 +89,14 @@ export const useAppStore = create<AppState>()(
         set((s) => ({ likedIds: s.likedIds.filter((x) => x !== id) })),
       pass: (id) =>
         set((s) => ({ passedIds: Array.from(new Set([...s.passedIds, id])) })),
-      reset: () => set({ onboarding: initialOnboarding, likedIds: [], passedIds: [] }),
+      setDiscoverFilters: (f) => set({ discoverFilters: f }),
+      reset: () =>
+        set({
+          onboarding: initialOnboarding,
+          likedIds: [],
+          passedIds: [],
+          discoverFilters: DEFAULT_FILTERS,
+        }),
     }),
     { name: "findyourkin-store" },
   ),

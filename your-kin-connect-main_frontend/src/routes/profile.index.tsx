@@ -5,6 +5,24 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Edit3, Info, LogOut, Settings, ShieldCheck, Sparkles, Heart, Bug } from "lucide-react";
 import { Tag } from "@/components/tag";
 import { requireOnboarded } from "@/lib/route-guards";
+import { quizQuestions } from "@/lib/mock-data";
+import { supabase } from "@/lib/supabase";
+
+// Human-readable chips derived from the person's actual quiz answers —
+// replaces the old hardcoded placeholder tags that were the same for everyone.
+const VIBE_LABELS: Record<string, Record<string, string>> = {
+  wake: { early: "Early bird", mid: "Steady riser", late: "Night owl" },
+  clean: { spotless: "Neat freak", tidy: "Generally tidy", chill: "Lived-in cosy" },
+  guests: { rare: "Quiet home", some: "Occasional guests", often: "Loves hosting" },
+  social: { friends: "Dinner-together energy", friendly: "Friendly & independent", "hi-bye": "Hi-and-bye" },
+  wfh: { never: "Out most days", hybrid: "Hybrid", mostly: "Mostly WFH", always: "Fully remote" },
+};
+
+function vibesFrom(quiz: Record<string, string>): string[] {
+  return Object.entries(VIBE_LABELS)
+    .map(([q, labels]) => labels[quiz[q]])
+    .filter((v): v is string => !!v);
+}
 
 export const Route = createFileRoute("/profile/")({
   head: () => ({ meta: [{ title: "Your profile — findyourKin" }] }),
@@ -70,18 +88,20 @@ function MyProfile() {
         <div className="mt-6 grid grid-cols-3 gap-3">
           <Stat label="Likes" value={likedIds.length.toString()} />
           <Stat label="Profile" value={onboarding.verifiedId ? "Verified" : "Basic"} />
-          <Stat label="Quiz" value={`${Object.keys(onboarding.quiz).length}/5`} />
+          <Stat label="Quiz" value={`${Object.keys(onboarding.quiz).length}/${quizQuestions.length}`} />
         </div>
 
-        {/* Tags */}
-        <section className="mt-8">
-          <h2 className="text-sm font-semibold">Your vibes</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {["Early bird", "Neat freak", "Plant parent", "WFH"].map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-          </div>
-        </section>
+        {/* Tags — derived from real quiz answers */}
+        {vibesFrom(onboarding.quiz).length > 0 && (
+          <section className="mt-8">
+            <h2 className="text-sm font-semibold">Your vibes</h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {vibesFrom(onboarding.quiz).map((t) => (
+                <Tag key={t}>{t}</Tag>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Menu */}
         <section className="mt-8 rounded-2xl border border-border bg-surface divide-y divide-border overflow-hidden">
@@ -94,7 +114,10 @@ function MyProfile() {
         </section>
 
         <button
-          onClick={() => {
+          onClick={async () => {
+            // Sign out of Supabase too — clearing only local state left the
+            // real session alive, so "logged out" users were still logged in.
+            await supabase.auth.signOut();
             logout();
             navigate({ to: "/" });
           }}

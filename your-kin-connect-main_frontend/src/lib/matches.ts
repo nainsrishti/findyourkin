@@ -30,3 +30,28 @@ export const matchesQuery = queryOptions({
   queryKey: ["matches"],
   queryFn: fetchMatches,
 });
+
+// Client-side filtering for the Discover Filters screen. Only fields the
+// matches endpoint actually returns can be filtered here — anything else
+// (budget, neighborhood) would need the edge function to ship more data.
+import type { DiscoverFilters } from "./store";
+
+export function applyDiscoverFilters(
+  list: MatchResult[],
+  f: DiscoverFilters,
+): MatchResult[] {
+  return list.filter((m) => {
+    if (f.situation !== "any" && m.situation !== f.situation) return false;
+    if (f.ageRange !== "any") {
+      if (m.age === null) return false;
+      if (f.ageRange === "18-24" && (m.age < 18 || m.age > 24)) return false;
+      if (f.ageRange === "25-30" && (m.age < 25 || m.age > 30)) return false;
+      if (f.ageRange === "31plus" && m.age < 31) return false;
+    }
+    return true;
+  });
+}
+
+export function filtersActive(f: DiscoverFilters): boolean {
+  return f.situation !== "any" || f.ageRange !== "any";
+}

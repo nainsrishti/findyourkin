@@ -11,10 +11,20 @@ export const Route = createFileRoute("/safety")({
   component: SafetyPage,
 });
 
-const RESOURCES = [
-  { icon: MessageSquareWarning, title: "Report a profile", body: "Flag anything that feels off. Reports stay anonymous." },
-  { icon: UserX, title: "Block someone", body: "Blocked profiles can no longer see or message you." },
-  { icon: Phone, title: "24/7 helpline", body: "Talk to a support advisor — always free." },
+const SUPPORT_MAILTO = `mailto:nainsrishtisingh@gmail.com?subject=${encodeURIComponent(
+  "Safety concern — findyourKin",
+)}`;
+
+// Informational — the actual report/block actions live in each chat's ⋮ menu.
+const RESOURCES: {
+  icon: typeof MessageSquareWarning;
+  title: string;
+  body: string;
+  href?: string;
+}[] = [
+  { icon: MessageSquareWarning, title: "Report a profile", body: "Open a chat with them and tap ⋮ → Report. Reports stay anonymous." },
+  { icon: UserX, title: "Block someone", body: "In their chat, tap ⋮ → Block. They won't see or message you again." },
+  { icon: Phone, title: "Email the team", body: "Anything urgent or uncomfortable — we read every message.", href: SUPPORT_MAILTO },
 ];
 
 const TIPS = [
@@ -35,13 +45,15 @@ function SafetyPage() {
           </div>
           <h2 className="mt-4 text-xl font-bold">Your safety comes first</h2>
           <p className="mt-2 text-sm text-white/85">
-            Every profile is verified. If something ever feels wrong, we're one tap away.
+            If something ever feels wrong, report it from the chat or write to
+            us directly — we read everything.
           </p>
           <Button
+            asChild
             variant="secondary"
             className="mt-4 h-11 rounded-lg bg-white text-primary hover:bg-white/90"
           >
-            Contact support
+            <a href={SUPPORT_MAILTO}>Contact support</a>
           </Button>
         </div>
 
@@ -50,11 +62,8 @@ function SafetyPage() {
           <div className="mt-3 rounded-2xl border border-border bg-surface divide-y divide-border overflow-hidden">
             {RESOURCES.map((r) => {
               const Icon = r.icon;
-              return (
-                <button
-                  key={r.title}
-                  className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/50"
-                >
+              const inner = (
+                <>
                   <div className="flex size-9 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                     <Icon className="size-4" />
                   </div>
@@ -62,8 +71,21 @@ function SafetyPage() {
                     <p className="text-sm font-semibold">{r.title}</p>
                     <p className="text-xs text-muted-foreground">{r.body}</p>
                   </div>
-                  <ChevronRight className="size-4 text-muted-foreground" />
-                </button>
+                  {r.href && <ChevronRight className="size-4 text-muted-foreground" />}
+                </>
+              );
+              return r.href ? (
+                <a
+                  key={r.title}
+                  href={r.href}
+                  className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/50"
+                >
+                  {inner}
+                </a>
+              ) : (
+                <div key={r.title} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+                  {inner}
+                </div>
               );
             })}
           </div>

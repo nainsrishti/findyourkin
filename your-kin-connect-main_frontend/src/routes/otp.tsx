@@ -64,7 +64,9 @@ function OtpPage() {
 
   return (
     <PhoneShell>
-      <ScreenHeader title="Verify your email" backTo="/signup" />
+      {/* No fixed backTo — you can arrive here from /login or /signup, so
+          go back to whichever screen actually sent you. */}
+      <ScreenHeader title="Verify your email" />
       <div className="px-6 pt-6">
         <h2 className="text-2xl font-bold text-foreground">Enter the 6-digit code</h2>
         <p className="mt-1 text-sm text-muted-foreground">
