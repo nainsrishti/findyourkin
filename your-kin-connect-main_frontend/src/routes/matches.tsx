@@ -89,7 +89,7 @@ function MatchesPage() {
         />
       )}
 
-      <SectionHeader title="New this week" />
+      <SectionHeader title="Start here" />
       <div className="flex gap-3 overflow-x-auto no-scrollbar px-6 pb-2">
         {newMatches.map((item) => (
           <StripCard key={item.id} item={item} />

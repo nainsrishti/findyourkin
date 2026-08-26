@@ -13,7 +13,7 @@ export const Route = createFileRoute("/finding-matches")({
 
 const STEPS = [
   "Analyzing your lifestyle answers…",
-  "Scanning verified profiles nearby…",
+  "Scanning profiles in your city…",
   "Scoring compatibility…",
   "Almost there — surfacing your top matches…",
 ];

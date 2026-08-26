@@ -9,11 +9,11 @@ import { AlertTriangle, Check, X } from "lucide-react";
 export const Route = createFileRoute("/demo")({
   head: () => ({
     meta: [
-      { title: "See example matches — findyourKin" },
+      { title: "How matching works — findyourKin" },
       {
         name: "description",
         content:
-          "A few real examples of how findyourKin scores flatmate compatibility — including why a bad conflict-style pairing gets capped, not averaged away.",
+          "Worked examples of how findyourKin scores flatmate compatibility — including why a bad conflict-style pairing gets capped, not averaged away.",
       },
     ],
   }),
@@ -126,12 +126,12 @@ const EXAMPLES: DemoMatch[] = [
 function DemoPage() {
   return (
     <PhoneShell>
-      <ScreenHeader title="Example matches" backTo="/" />
+      <ScreenHeader title="How matching works" backTo="/" />
       <div className="px-6 pb-10">
         <h2 className="mt-6 text-2xl font-bold">What a match actually looks like</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Four real examples of how we score compatibility — not signed-up users, just illustrating the method
-          before you try it yourself.
+          Four worked examples of how we score compatibility. These aren't real
+          users — just the method in action, before you try it yourself.
         </p>
 
         <div className="mt-8 space-y-6">

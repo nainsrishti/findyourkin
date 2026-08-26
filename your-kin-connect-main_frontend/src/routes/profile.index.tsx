@@ -106,7 +106,7 @@ function MyProfile() {
         {/* Menu */}
         <section className="mt-8 rounded-2xl border border-border bg-surface divide-y divide-border overflow-hidden">
           <MenuRow icon={<Sparkles className="size-4" />} label="Retake lifestyle quiz" to="/onboarding/quiz" />
-          <MenuRow icon={<Heart className="size-4" />} label="Your likes & passes" to="/matches" />
+          <MenuRow icon={<Heart className="size-4" />} label="People you've liked" to="/matches" />
           <MenuRow icon={<ShieldCheck className="size-4" />} label="Verification" to="/onboarding/verification" />
           <MenuRow icon={<Settings className="size-4" />} label="Settings" to="/settings" />
           <MenuRow icon={<Info className="size-4" />} label="Who we are" to="/about" />

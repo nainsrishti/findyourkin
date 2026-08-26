@@ -82,26 +82,19 @@ function VerificationStep() {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          You can skip this for now — it doesn't affect your matches.
+          Nothing to do here yet — verification won't affect your matches.
         </p>
       </div>
 
-      <div className="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-surface/95 backdrop-blur px-6 py-4">
+      <div className="sticky bottom-0 border-t border-border bg-surface/95 backdrop-blur px-6 py-4">
         <Button
           onClick={finish}
           size="lg"
           className="h-14 w-full rounded-lg text-base font-semibold"
           disabled={saving}
         >
-          {saving ? "Saving…" : "Continue to matches"}
+          {saving ? "Saving your profile…" : "Finish & see matches"}
         </Button>
-        <button
-          onClick={finish}
-          disabled={saving}
-          className="text-center text-sm font-medium text-muted-foreground"
-        >
-          Skip for now
-        </button>
       </div>
     </PhoneShell>
   );

@@ -328,7 +328,7 @@ function ExamplePreview() {
       <div className="mx-auto max-w-3xl px-6 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-foreground">See it before you sign up</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          Four real examples of the scoring in action — including a pairing that looks great on paper
+          Four worked examples of the scoring in action — including a pairing that looks great on paper
           until the conflict-style gate steps in.
         </p>
         <Link

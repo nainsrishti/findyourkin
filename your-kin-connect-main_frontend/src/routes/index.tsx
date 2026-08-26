@@ -93,8 +93,10 @@ function Welcome() {
                   Who we are
                 </Link>
               </div>
+              {/* No Terms/Privacy pages exist yet — don't claim documents we
+                  don't have. Swap this back once those pages are written. */}
               <p className="mt-2 text-center text-xs text-white/70">
-                By continuing you agree to our Terms and Privacy Policy.
+                Free while we're in early access. No broker fees, ever.
               </p>
             </motion.div>
           </div>

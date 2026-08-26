@@ -3,11 +3,11 @@ import { PhoneShell } from "@/components/phone-shell";
 import { ScreenHeader } from "@/components/screen-header";
 import { AlertTriangle, ChevronRight, MessageSquareWarning, Phone, ShieldCheck, UserX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { requireOnboarded } from "@/lib/route-guards";
 
+// Public on purpose — the About page footer links here for visitors who
+// haven't signed up yet, and there's nothing account-specific on it.
 export const Route = createFileRoute("/safety")({
   head: () => ({ meta: [{ title: "Safety center — findyourKin" }] }),
-  beforeLoad: () => requireOnboarded(),
   component: SafetyPage,
 });
 
@@ -37,7 +37,9 @@ const TIPS = [
 function SafetyPage() {
   return (
     <PhoneShell>
-      <ScreenHeader title="Safety center" backTo="/profile" />
+      {/* No fixed backTo — reachable from both the About footer (logged out)
+          and Settings (logged in), so go back to wherever you came from. */}
+      <ScreenHeader title="Safety center" />
       <div className="px-6 pt-4 pb-12">
         <div className="rounded-3xl bg-primary p-6 text-primary-foreground">
           <div className="flex size-12 items-center justify-center rounded-full bg-white/15">

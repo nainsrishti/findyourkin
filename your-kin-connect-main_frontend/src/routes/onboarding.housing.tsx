@@ -90,9 +90,13 @@ function HousingStep() {
       <ScreenHeader title="Step 3 of 6" backTo="/onboarding/profile" />
       <div className="px-6 pb-32">
         <StepProgress step={3} total={6} />
-        <h2 className="mt-6 text-2xl font-bold">Where are you looking?</h2>
+        <h2 className="mt-6 text-2xl font-bold">
+          {choice === "have-place" ? "Tell us about your place" : "Where are you looking?"}
+        </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Tell us where you'd like to live and your budget.
+          {choice === "have-place"
+            ? "Where it is, and what a flatmate would pay."
+            : "Tell us where you'd like to live and your budget."}
         </p>
 
         {choice === "have-place" && (

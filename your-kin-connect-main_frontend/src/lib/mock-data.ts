@@ -252,7 +252,7 @@ export const quizQuestions: QuizQuestion[] = [
     options: [
       { value: "rota", label: "Clear rota, split evenly", emoji: "📋" },
       { value: "flex", label: "Whoever notices, handles it", emoji: "🤝" },
-      { value: "hired", label: "Get a house help", emoji: "🧹" },
+      { value: "hired", label: "Get house help", emoji: "🧹" },
     ],
   },
   {

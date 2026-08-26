@@ -6,7 +6,6 @@ import { StepProgress } from "@/components/step-progress";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Tag } from "@/components/tag";
 import { useAppStore } from "@/lib/store";
 import { requireSession } from "@/lib/route-guards";
 
@@ -15,12 +14,6 @@ export const Route = createFileRoute("/onboarding/preferences")({
   beforeLoad: () => requireSession(),
   component: PreferencesStep,
 });
-
-const GUESTS = [
-  { v: "rare", l: "Rarely" },
-  { v: "some", l: "Sometimes" },
-  { v: "often", l: "Often" },
-];
 
 function PreferencesStep() {
   const navigate = useNavigate();
@@ -44,26 +37,16 @@ function PreferencesStep() {
       <ScreenHeader title="Step 5 of 6" backTo="/onboarding/quiz" />
       <div className="px-6 pb-32">
         <StepProgress step={5} total={6} />
-        <h2 className="mt-6 text-2xl font-bold">Your preferences</h2>
+        <h2 className="mt-6 text-2xl font-bold">Your must-haves</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          We'll use these as filters — not deal-breakers.
+          These work as hard filters — we won't match you against someone who
+          clashes with them, no matter how good the rest of the fit is.
         </p>
 
         <div className="mt-6 space-y-3">
           <Row id="pets" label="OK with pets" checked={p.pets} onChange={(v: boolean) => setP({ ...p, pets: v })} />
-          <Row id="smoker" label="OK with smokers" checked={p.smoker} onChange={(v: boolean) => setP({ ...p, smoker: v })} />
-          <Row id="veg" label="Vegetarian household" checked={p.vegetarian} onChange={(v: boolean) => setP({ ...p, vegetarian: v })} />
-        </div>
-
-        <div className="mt-8">
-          <h3 className="text-sm font-semibold text-foreground">Guests over</h3>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {GUESTS.map((g) => (
-              <Tag key={g.v} onClick={() => setP({ ...p, guests: g.v })} selected={p.guests === g.v}>
-                {g.l}
-              </Tag>
-            ))}
-          </div>
+          <Row id="smoker" label="OK with smoking indoors" checked={p.smoker} onChange={(v: boolean) => setP({ ...p, smoker: v })} />
+          <Row id="veg" label="Vegetarian-only kitchen" checked={p.vegetarian} onChange={(v: boolean) => setP({ ...p, vegetarian: v })} />
         </div>
       </div>
 
